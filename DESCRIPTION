@@ -1,0 +1,15 @@
+Package: SureTypeSCR
+Title: Interface to python based package SureTypeSC via reticulate
+Description: SureTypeSCR is the implementation of algorithm for regenotyping of single cell data coming from Illumina BeadArrays without genome studio.
+Version: 0.99.0
+Author: Ivan Vogel, Lishan Cai
+Suggests: testthat
+Depends: R (>= 3.5.0), reticulate, knitr
+Maintainer: Lishan Cai <Lishan@sund.dk.com>
+License: Artistic-2.0
+biocViews: Software, GenotypingArray
+VignetteBuilder: knitr
+SystemRequirements: python (>= 2.7), sklearn, numpy, pandas,
+        SureTypeSC, IlluminaBeadArrayFiles
+NeedsCompilation: no
+Packaged: 2019-09-09 13:04:15 UTC; apple

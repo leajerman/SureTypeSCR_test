@@ -1,0 +1,12 @@
+[Header],,,,
+INVESTIGATOR NAME,Ivan,,,
+PROJECT NAME,Test1,,,
+EXPERIMENT NAME,SingleCellReference,,,
+DATE,19/10/2016 00:00,,,
+[Manifests],,,,
+A,HumanKaryomap-12v1_A,,,
+[Data],,,,
+Sample_ID,SentrixBarcode_A,SentrixPosition_A,Path,Aux
+Kit4_4mos_SC21,9968648019,R06C01,C:\Users\vzr458\Downloads\Lishan\SingleCellExampleData\GTCs,0
+Kit4_4mos_SC22,9968648019,R06C02,C:\Users\vzr458\Downloads\Lishan\SingleCellExampleData\GTCs,0
+
