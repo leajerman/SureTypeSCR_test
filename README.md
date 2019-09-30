@@ -48,7 +48,7 @@ df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
 
 ```
 
-## To convert pandas dataframe to Data object and rearrange the index to multi-index leve,
+## To convert pandas dataframe to Data object and rearrange the index to multi-index level,
 we use create_from_frame. And users can check the valuse by specifiy the 'df' attribution.
 ```{r dotinde}
 dfs <- create_from_frame(df)
