@@ -45,7 +45,6 @@ clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packa
 
 ```{r dota}
 df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
-
 ```
 
 ## To convert pandas dataframe to Data object and rearrange the index to multi-index level,
@@ -62,8 +61,6 @@ values$columns
 values$dtypes
 
 values['sc21']['score'][900:1200]
-
-
 ```
 
 ## To select certain chromosomes, apply the threshold on the Gencall score and calculate
@@ -73,7 +70,6 @@ m and a features (training data preparation)
 dfs$restrict_chromosomes(c('1','2'))
 dfs$apply_NC_threshold_3(0.01)
 dfs$calculate_transformations_2() 
-
 ```
 
 # Train and Predict
@@ -86,7 +82,6 @@ clf_gda <- scload(clf_gda_path)
 
 result_rf <- clf_rf$predict_decorate(dfs, clftype='rf')
 result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
-
 ```
 
 ## To train the cascade of Random Forest and Guassian Discriminant Analysis:
@@ -95,7 +90,6 @@ result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
 trainer <- scTrain(result_rf,clfname='gda')
 
 result_end <- trainer$predict_decorate(result_gda,clftype='rf-gda') 
-
 ```
 
 
