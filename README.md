@@ -5,14 +5,7 @@ A key motivation of SureTypeSCR is that accurate genotyping of DNA from a single
 SureTypeSCR, based on python, is a two-stage machine learning algorithm that filters a substantial part of the noise, thereby retaining of the majority of
 the high quality SNPs. SureTypeSCR consists of two layers, Random Forest (RF) and Gaussian Discriminant Analysis (GDA).
 
-# Basic concepts
 
-```{r dsetup,echo=FALSE,results="hide",include=FALSE}
-suppressPackageStartupMessages({
-library(SureTypeSCR)
-library(BiocStyle)
-})
-```
 
 ## Module references
 
