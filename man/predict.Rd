@@ -3,7 +3,7 @@
 \title{Predictions from Random Forest classifier or Gaussian Discriminant Analysis}
 \usage{
 
-clf_rf.predict_decorate(test,clftype='rf')
+clf_rf$predict_decorate(test,clftype='rf')
 
 }
 
