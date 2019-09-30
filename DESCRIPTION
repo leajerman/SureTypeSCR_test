@@ -7,7 +7,7 @@ Suggests: testthat
 Depends: R (>= 3.5.0), reticulate, knitr
 Maintainer: Lishan Cai <Lishan@sund.dk.com>
 License: Artistic-2.0
-biocViews: Software, GenotypingArray
+biocViews: Software, GenotypingArray,SingleCell
 VignetteBuilder: knitr
 SystemRequirements: python (>= 2.7), sklearn, numpy, pandas,
         SureTypeSC, IlluminaBeadArrayFiles
