@@ -37,7 +37,7 @@ clf_rf <- scload(clf_rf_path)
 clf_gda <- scload(clf_gda_path) 
 
  # get genotyping data from gtc files and meta file
-df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
  
 # create Data object and rearrange the index
 dfs <- create_from_frame(df) 
