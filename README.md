@@ -26,7 +26,6 @@ of effort required to convert data from R to python
 for natural use in each language. SureTypeSCR package includes test data.
 
 ```{r doimp}
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
 cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
 manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
@@ -37,7 +36,7 @@ clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packa
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
 
 ```{r dota}
-df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 ```
 
 ## To convert pandas dataframe to Data object and rearrange the index to multi-index level,
