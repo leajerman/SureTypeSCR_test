@@ -17,7 +17,7 @@ clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packag
 clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
 
 ## ----dota------------------------------------------------------------------
-df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 
 
 ## ----dotinde---------------------------------------------------------------
