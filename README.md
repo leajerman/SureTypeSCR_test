@@ -1,3 +1,19 @@
+# Installation
+
+After downloading and unpacking the package and rename the fold to be SureTypeSCR, run the command line below to install the R package SureTypeSCR
+
+```
+R CMD build SureTypeSCR
+
+R CMD INSTALL SureTypeSCR_0.99.0.tar.gz
+```
+
+or the other way is possible (only if this repository is public)
+```
+devtools::install_github('Meiomap/SureTypeSCR’, build_vignettes = TRUE)
+```
+
+
 # Introduction
 
 A key motivation of SureTypeSCR is that accurate genotyping of DNA from a single cell is required for application such as de novo mutation detection and linkage analysis, but achieving high precision genotyping in the single cell environment is challenging due to the errors caused by whole genome amplification.
