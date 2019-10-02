@@ -60,7 +60,7 @@ clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packa
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
 
 ```{r dota}
-df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 
 ```
 
