@@ -28,7 +28,7 @@ manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSC
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 
 # get genotyping data from gtc files and meta file
-df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 
 #/Users/apple/anaconda3/envs/gtc2/lib/python2.7/site-packages/sklearn/ensemble/weight_boosting.py:29: 
 #DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. 
