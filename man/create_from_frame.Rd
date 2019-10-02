@@ -23,7 +23,7 @@ manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSC
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 
 # get genotyping data from gtc files and meta file
-df <- scbasic(gtc_path,manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 
 
 # create Data object and rearrange the index
