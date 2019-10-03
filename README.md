@@ -26,7 +26,7 @@ the high quality SNPs. SureTypeSCR consists of two layers, Random Forest (RF) an
 ## Module references
 
 The package includes a list of references to python
-modules including numpy, pandas and SureTypeSCR.
+modules including numpy, pandas and SureTypeSC.
 
 ```{r loadup}
 library(SureTypeSCR)
