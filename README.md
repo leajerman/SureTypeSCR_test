@@ -55,7 +55,42 @@ clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packa
 df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 ```
 
-## To convert pandas dataframe to Data object and rearrange the index to multi-index level,
+## GTC data quality check
+### call rate over all samples
+
+```{r call}
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+
+callrate_allsamples <- callrate(df,th=0.3)
+
+callrate_onechr <- callrate_chr(df,'X', th=0.15)
+
+geno_freq <- allele_freq(df,th=0.01)
+
+```
+
+### M ans A features calculate of one locus
+
+```{r locus}
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+
+locus <- locus_ma(df,'rs3128117')
+
+```
+
+### PCA
+
+```{r PCA}
+
+df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+
+pca_all <- pca_samples(df,th=0.1)
+
+pca_onechr <- pca_chr(df,'X',th=0.1)
+```
+
+
+## To convert pandas dataframe to Data object and rearrange the index to multi-index leve,
 we use create_from_frame. And users can check the valuse by specifiy the 'df' attribution.
 ```{r dotinde}
 dfs <- create_from_frame(df)
@@ -69,15 +104,18 @@ values$columns
 values$dtypes
 
 values['sc21']['score'][900:1200]
+
+
 ```
 
 ## To select certain chromosomes, apply the threshold on the Gencall score and calculate
 m and a features (training data preparation)
 
 ```{r dotx}
-dfs$restrict_chromosomes(c('1','2'))
-dfs$apply_NC_threshold_3(0.01)
-dfs$calculate_transformations_2() 
+dfs <- restrict_chrom(dfs,c('1','2'))
+dfs <- apply_thresh(dfs,0.01)
+dfs <- calculate_ma(dfs) 
+
 ```
 
 # Train and Predict
@@ -90,6 +128,7 @@ clf_gda <- scload(clf_gda_path)
 
 result_rf <- clf_rf$predict_decorate(dfs, clftype='rf')
 result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
+
 ```
 
 ## To train the cascade of Random Forest and Guassian Discriminant Analysis:
@@ -98,6 +137,7 @@ result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
 trainer <- scTrain(result_rf,clfname='gda')
 
 result_end <- trainer$predict_decorate(result_gda,clftype='rf-gda') 
+
 ```
 
 
