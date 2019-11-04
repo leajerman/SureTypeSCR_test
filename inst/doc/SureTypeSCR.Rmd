@@ -16,11 +16,12 @@ output:
 
 # Introduction
 
-A key motivation of SureTypeSCR is that accurate genotyping of DNA from a single cell is required for application such as de novo mutation detection and linkage analysis, but achieving high precision genotyping in the single cell environment is challenging due to the errors caused by whole genome amplification.
+A key motivation of SureTypeSCR is that accurate genotyping of DNA from a single cell is required for application such as de novo mutation detection and linkage analysis, but achieving high precision genotyping in the single cell environment is challenging due to the errors caused by whole genome amplification. 
 
 SureTypeSCR, based on python, is a two-stage machine learning algorithm that filters a substantial part of the noise, thereby retaining of the majority of
 the high quality SNPs. SureTypeSCR consists of two layers, Random Forest (RF) and Gaussian Discriminant Analysis (GDA).
 
+This package also includes quality check (call rate, principle component analysis etc.)
 # Basic concepts
 
 ```{r dsetup,echo=FALSE,results="hide",include=FALSE}
@@ -37,7 +38,7 @@ modules including numpy, pandas and SureTypeSCR.
 
 ```{r loadup}
 library(SureTypeSCR)
-scall = scEls()
+scEls()
 ```
 
 
@@ -60,9 +61,48 @@ clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packa
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
 
 ```{r dota}
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
 
 ```
+
+## GTC data quality check
+### call rate over all samples
+
+```{r call}
+df <- scbasic(manifest_path,cluster_path,samplesheet)
+
+callrate_allsamples <- callrate(df,th=0.3)
+
+callrate_onechr <- callrate_chr(df,'X', th=0.15)
+
+geno_freq <- allele_freq(df,th=0.01)
+
+```
+
+### M ans A features calculate of one locus
+
+```{r locus}
+df <- scbasic(manifest_path,cluster_path,samplesheet)
+
+locus <- locus_ma(df,'rs3128117')
+
+am <- sample_ma(df,'Kit4_4mos_SC21','1')
+
+```
+
+
+
+### PCA
+
+```{r PCA}
+
+df <- scbasic(manifest_path,cluster_path,samplesheet)
+
+pca_all <- pca_samples(df,th=0.1)
+
+pca_onechr <- pca_chr(df,'X',th=0.1)
+```
+
 
 ## To convert pandas dataframe to Data object and rearrange the index to multi-index leve,
 we use create_from_frame. And users can check the valuse by specifiy the 'df' attribution.
@@ -86,9 +126,9 @@ values['sc21']['score'][900:1200]
 m and a features (training data preparation)
 
 ```{r dotx}
-dfs$restrict_chromosomes(c('1','2'))
-dfs$apply_NC_threshold_3(0.01)
-dfs$calculate_transformations_2() 
+dfs <- restrict_chrom(dfs,c('1','2'))
+dfs <- apply_thresh(dfs,0.01)
+dfs <- calculate_ma(dfs) 
 
 ```
 
@@ -119,13 +159,9 @@ result_end <- trainer$predict_decorate(result_gda,clftype='rf-gda')
 
 After prediction, we can save the results
 ```{r doincr}
-result_end$save_complete_table('fulltable.txt',header=TRUE)
 
-result_end$save_mode('recall','recall.txt',header=FALSE) 
 
-result_end$save_mode('precision','precision.txt',header=FALSE) 
-
-result_end$save_mode('standard','standard.txt',header=FALSE) 
+scsave(result_end,'recall.txt',clftype='rf',threshold=0.15,all=FALSE)
 ```
 
 

@@ -223,27 +223,31 @@ summary {
 
 <h1 class="title toc-ignore">SureTypeSCR – Implementation of algorithm for regenotyping of single cell data.</h1>
 <p class="author-name">Ivan Vogel, Lishan Cai</p>
-<h4 class="date">九月 09, 2019</h4>
+<h4 class="date">十月 28, 2019</h4>
 
 </div>
 
 <h1>Contents</h1>
 <div id="TOC">
 <ul>
-<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
-<li><a href="#basic-concepts"><span class="toc-section-number">2</span> Basic concepts</a><ul>
-<li><a href="#module-references"><span class="toc-section-number">2.1</span> Module references</a></li>
-<li><a href="#importing-data-for-direct-handling-by-python-functions"><span class="toc-section-number">2.2</span> Importing data for direct handling by python functions</a></li>
-<li><a href="#to-process-the-raw-gtc-files-without-genomesutdio-we-can-use-scbasic."><span class="toc-section-number">2.3</span> To process the raw gtc files without genomesutdio, we can use scbasic.</a></li>
-<li><a href="#to-convert-pandas-dataframe-to-data-object-and-rearrange-the-index-to-multi-index-leve"><span class="toc-section-number">2.4</span> To convert pandas dataframe to Data object and rearrange the index to multi-index leve,</a></li>
-<li><a href="#to-select-certain-chromosomes-apply-the-threshold-on-the-gencall-score-and-calculate"><span class="toc-section-number">2.5</span> To select certain chromosomes, apply the threshold on the Gencall score and calculate</a></li>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a><ul>
+<li><a href="#module-references"><span class="toc-section-number">1.1</span> Module references</a></li>
+<li><a href="#importing-data-for-direct-handling-by-python-functions"><span class="toc-section-number">1.2</span> Importing data for direct handling by python functions</a></li>
+<li><a href="#to-process-the-raw-gtc-files-without-genomesutdio-we-can-use-scbasic."><span class="toc-section-number">1.3</span> To process the raw gtc files without genomesutdio, we can use scbasic.</a></li>
+<li><a href="#gtc-data-quality-check"><span class="toc-section-number">1.4</span> GTC data quality check</a><ul>
+<li><a href="#call-rate-over-all-samples"><span class="toc-section-number">1.4.1</span> call rate over all samples</a></li>
+<li><a href="#m-ans-a-features-calculate-of-one-locus"><span class="toc-section-number">1.4.2</span> M ans A features calculate of one locus</a></li>
+<li><a href="#pca"><span class="toc-section-number">1.4.3</span> PCA</a></li>
 </ul></li>
-<li><a href="#train-and-predict"><span class="toc-section-number">3</span> Train and Predict</a><ul>
-<li><a href="#to-load-classifiers-rf-random-forest-gda-gaussian-discriminat-analysis-and-predict"><span class="toc-section-number">3.1</span> To load classifiers (rf: Random Forest; gda: gaussian discriminat analysis) and predict</a></li>
-<li><a href="#to-train-the-cascade-of-random-forest-and-guassian-discriminant-analysis"><span class="toc-section-number">3.2</span> To train the cascade of Random Forest and Guassian Discriminant Analysis:</a></li>
+<li><a href="#to-convert-pandas-dataframe-to-data-object-and-rearrange-the-index-to-multi-index-leve"><span class="toc-section-number">1.5</span> To convert pandas dataframe to Data object and rearrange the index to multi-index leve,</a></li>
+<li><a href="#to-select-certain-chromosomes-apply-the-threshold-on-the-gencall-score-and-calculate"><span class="toc-section-number">1.6</span> To select certain chromosomes, apply the threshold on the Gencall score and calculate</a></li>
 </ul></li>
-<li><a href="#save-the-results"><span class="toc-section-number">4</span> Save the results</a></li>
-<li><a href="#conclusions"><span class="toc-section-number">5</span> Conclusions</a></li>
+<li><a href="#train-and-predict"><span class="toc-section-number">2</span> Train and Predict</a><ul>
+<li><a href="#to-load-classifiers-rf-random-forest-gda-gaussian-discriminat-analysis-and-predict"><span class="toc-section-number">2.1</span> To load classifiers (rf: Random Forest; gda: gaussian discriminat analysis) and predict</a></li>
+<li><a href="#to-train-the-cascade-of-random-forest-and-guassian-discriminant-analysis"><span class="toc-section-number">2.2</span> To train the cascade of Random Forest and Guassian Discriminant Analysis:</a></li>
+</ul></li>
+<li><a href="#save-the-results"><span class="toc-section-number">3</span> Save the results</a></li>
+<li><a href="#conclusions"><span class="toc-section-number">4</span> Conclusions</a></li>
 </ul>
 </div>
 
@@ -251,17 +255,20 @@ summary {
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>A key motivation of SureTypeSCR is that accurate genotyping of DNA from a single cell is required for application such as de novo mutation detection and linkage analysis, but achieving high precision genotyping in the single cell environment is challenging due to the errors caused by whole genome amplification.</p>
 <p>SureTypeSCR, based on python, is a two-stage machine learning algorithm that filters a substantial part of the noise, thereby retaining of the majority of the high quality SNPs. SureTypeSCR consists of two layers, Random Forest (RF) and Gaussian Discriminant Analysis (GDA).</p>
-</div>
-<div id="basic-concepts" class="section level1">
-<h1><span class="header-section-number">2</span> Basic concepts</h1>
+<p>This package also includes quality check (call rate, principle component analysis etc.) # Basic concepts</p>
 <div id="module-references" class="section level2">
-<h2><span class="header-section-number">2.1</span> Module references</h2>
+<h2><span class="header-section-number">1.1</span> Module references</h2>
 <p>The package includes a list of references to python modules including numpy, pandas and SureTypeSCR.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SureTypeSCR)
-scall =<span class="st"> </span><span class="kw">scEls</span>()</code></pre></div>
+<span class="kw">scEls</span>()</code></pre></div>
+<pre><code>## $sc
+## Module(SureTypeSC)
+## 
+## $pd
+## Module(pandas)</code></pre>
 </div>
 <div id="importing-data-for-direct-handling-by-python-functions" class="section level2">
-<h2><span class="header-section-number">2.2</span> Importing data for direct handling by python functions</h2>
+<h2><span class="header-section-number">1.2</span> Importing data for direct handling by python functions</h2>
 <p>The reticulate package is designed to limit the amount of effort required to convert data from R to python for natural use in each language. SureTypeSCR package includes test data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gtc_path =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;files/GTCs&quot;</span>,<span class="dt">package=</span><span class="st">'SureTypeSCR'</span>)
 cluster_path =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">'files/HumanKaryomap-12v1_A.egt'</span>,<span class="dt">package=</span><span class="st">'SureTypeSCR'</span>)
@@ -271,11 +278,38 @@ clf_rf_path =<span class="st"> </span><span class="kw">system.file</span>(<span 
 clf_gda_path =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">'files/clf_30trees_7228_ratio1_lightweight.clf'</span>,<span class="dt">package=</span><span class="st">'SureTypeSCR'</span>)</code></pre></div>
 </div>
 <div id="to-process-the-raw-gtc-files-without-genomesutdio-we-can-use-scbasic." class="section level2">
-<h2><span class="header-section-number">2.3</span> To process the raw gtc files without genomesutdio, we can use scbasic.</h2>
+<h2><span class="header-section-number">1.3</span> To process the raw gtc files without genomesutdio, we can use scbasic.</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)</code></pre></div>
 </div>
+<div id="gtc-data-quality-check" class="section level2">
+<h2><span class="header-section-number">1.4</span> GTC data quality check</h2>
+<div id="call-rate-over-all-samples" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> call rate over all samples</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)
+
+callrate_allsamples &lt;-<span class="st"> </span><span class="kw">callrate</span>(df,<span class="dt">th=</span><span class="fl">0.3</span>)
+
+callrate_onechr &lt;-<span class="st"> </span><span class="kw">callrate_chr</span>(df,<span class="st">'X'</span>, <span class="dt">th=</span><span class="fl">0.15</span>)
+
+geno_freq &lt;-<span class="st"> </span><span class="kw">allele_freq</span>(df,<span class="dt">th=</span><span class="fl">0.01</span>)</code></pre></div>
+</div>
+<div id="m-ans-a-features-calculate-of-one-locus" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> M ans A features calculate of one locus</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)
+
+locus &lt;-<span class="st"> </span><span class="kw">locus_ma</span>(df,<span class="st">'rs3128117'</span>)</code></pre></div>
+</div>
+<div id="pca" class="section level3">
+<h3><span class="header-section-number">1.4.3</span> PCA</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)
+
+pca_all &lt;-<span class="st"> </span><span class="kw">pca_samples</span>(df,<span class="dt">th=</span><span class="fl">0.1</span>)
+
+pca_onechr &lt;-<span class="st"> </span><span class="kw">pca_chr</span>(df,<span class="st">'X'</span>,<span class="dt">th=</span><span class="fl">0.1</span>)</code></pre></div>
+</div>
+</div>
 <div id="to-convert-pandas-dataframe-to-data-object-and-rearrange-the-index-to-multi-index-leve" class="section level2">
-<h2><span class="header-section-number">2.4</span> To convert pandas dataframe to Data object and rearrange the index to multi-index leve,</h2>
+<h2><span class="header-section-number">1.5</span> To convert pandas dataframe to Data object and rearrange the index to multi-index leve,</h2>
 <p>we use create_from_frame. And users can check the valuse by specifiy the ‘df’ attribution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfs &lt;-<span class="st"> </span><span class="kw">create_from_frame</span>(df)
 
@@ -290,17 +324,17 @@ values<span class="op">$</span>shape</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values<span class="op">$</span>dtypes</code></pre></div>
 <pre><code>## individual  feature
 ## sc21        gtype       object
-##             score      float32
+##             score      float64
 ##             x          float64
-##             x_raw       uint16
+##             x_raw        int32
 ##             y          float64
-##             y_raw       uint16
+##             y_raw        int32
 ## sc22        gtype       object
-##             score      float32
+##             score      float64
 ##             x          float64
-##             x_raw       uint16
+##             x_raw        int32
 ##             y          float64
-##             y_raw       uint16
+##             y_raw        int32
 ## dtype: object</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values[<span class="st">'sc21'</span>][<span class="st">'score'</span>][<span class="dv">900</span><span class="op">:</span><span class="dv">1200</span>]</code></pre></div>
 <pre><code>## Name        Chr  Position 
@@ -365,23 +399,20 @@ values<span class="op">$</span>shape</code></pre></div>
 ## rs1001728   22   45192660     0.032274
 ## rs1001729   6    2595478      0.839289
 ## rs10017326  4    47209075     0.943901
-## Name: score, Length: 301, dtype: float32</code></pre>
+## Name: score, Length: 301, dtype: float64</code></pre>
 </div>
 <div id="to-select-certain-chromosomes-apply-the-threshold-on-the-gencall-score-and-calculate" class="section level2">
-<h2><span class="header-section-number">2.5</span> To select certain chromosomes, apply the threshold on the Gencall score and calculate</h2>
+<h2><span class="header-section-number">1.6</span> To select certain chromosomes, apply the threshold on the Gencall score and calculate</h2>
 <p>m and a features (training data preparation)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfs<span class="op">$</span><span class="kw">restrict_chromosomes</span>(<span class="kw">c</span>(<span class="st">'1'</span>,<span class="st">'2'</span>))</code></pre></div>
-<pre><code>## ('keep the chromosomes to ', ['1', '2'])</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfs<span class="op">$</span><span class="kw">apply_NC_threshold_3</span>(<span class="fl">0.01</span>)</code></pre></div>
-<pre><code>## ('Gencall score', 0.01)</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfs<span class="op">$</span><span class="kw">calculate_transformations_2</span>() </code></pre></div>
-<pre><code>## Finish calculation of transformation M, A</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfs &lt;-<span class="st"> </span><span class="kw">restrict_chrom</span>(dfs,<span class="kw">c</span>(<span class="st">'1'</span>,<span class="st">'2'</span>))
+dfs &lt;-<span class="st"> </span><span class="kw">apply_thresh</span>(dfs,<span class="fl">0.01</span>)
+dfs &lt;-<span class="st"> </span><span class="kw">calculate_ma</span>(dfs) </code></pre></div>
 </div>
 </div>
 <div id="train-and-predict" class="section level1">
-<h1><span class="header-section-number">3</span> Train and Predict</h1>
+<h1><span class="header-section-number">2</span> Train and Predict</h1>
 <div id="to-load-classifiers-rf-random-forest-gda-gaussian-discriminat-analysis-and-predict" class="section level2">
-<h2><span class="header-section-number">3.1</span> To load classifiers (rf: Random Forest; gda: gaussian discriminat analysis) and predict</h2>
+<h2><span class="header-section-number">2.1</span> To load classifiers (rf: Random Forest; gda: gaussian discriminat analysis) and predict</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clf_rf &lt;-<span class="st"> </span><span class="kw">scload</span>(clf_rf_path)
 clf_gda &lt;-<span class="st"> </span><span class="kw">scload</span>(clf_gda_path)
 
@@ -389,26 +420,26 @@ result_rf &lt;-<span class="st"> </span>clf_rf<span class="op">$</span><span cla
 result_gda &lt;-<span class="st"> </span>clf_gda<span class="op">$</span><span class="kw">predict_decorate</span>(result_rf,<span class="dt">clftype=</span><span class="st">'gda'</span>)</code></pre></div>
 </div>
 <div id="to-train-the-cascade-of-random-forest-and-guassian-discriminant-analysis" class="section level2">
-<h2><span class="header-section-number">3.2</span> To train the cascade of Random Forest and Guassian Discriminant Analysis:</h2>
+<h2><span class="header-section-number">2.2</span> To train the cascade of Random Forest and Guassian Discriminant Analysis:</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">trainer &lt;-<span class="st"> </span><span class="kw">scTrain</span>(result_rf,<span class="dt">clfname=</span><span class="st">'gda'</span>)
 
 result_end &lt;-<span class="st"> </span>trainer<span class="op">$</span><span class="kw">predict_decorate</span>(result_gda,<span class="dt">clftype=</span><span class="st">'rf-gda'</span>) </code></pre></div>
 </div>
 </div>
 <div id="save-the-results" class="section level1">
-<h1><span class="header-section-number">4</span> Save the results</h1>
+<h1><span class="header-section-number">3</span> Save the results</h1>
 <p>After prediction, we can save the results</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_complete_table</span>(<span class="st">'fulltable.txt'</span>,<span class="dt">header=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## Finish saving</code></pre>
+<pre><code>## None</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_mode</span>(<span class="st">'recall'</span>,<span class="st">'recall.txt'</span>,<span class="dt">header=</span><span class="ot">FALSE</span>) </code></pre></div>
-<pre><code>## Finish saving</code></pre>
+<pre><code>## None</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_mode</span>(<span class="st">'precision'</span>,<span class="st">'precision.txt'</span>,<span class="dt">header=</span><span class="ot">FALSE</span>) </code></pre></div>
-<pre><code>## Finish saving</code></pre>
+<pre><code>## None</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_mode</span>(<span class="st">'standard'</span>,<span class="st">'standard.txt'</span>,<span class="dt">header=</span><span class="ot">FALSE</span>) </code></pre></div>
-<pre><code>## Finish saving</code></pre>
+<pre><code>## None</code></pre>
 </div>
 <div id="conclusions" class="section level1">
-<h1><span class="header-section-number">5</span> Conclusions</h1>
+<h1><span class="header-section-number">4</span> Conclusions</h1>
 <p>We need more applications and profiling.</p>
 </div>
 

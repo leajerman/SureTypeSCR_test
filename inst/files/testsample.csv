@@ -1,0 +1,10 @@
+[Header]  
+INVESTIGATOR NAME  Ivan  
+PROJECT NAME  Test1
+EXPERIMENT NAME  SingleCellReference
+DATE  19/10/2016  00:00
+[Manifests]  
+A  HumanKaryomap-12v1_A
+[Data]
+Sample_ID  SentrixBarcode_A  SentrixPosition_A  Path,Aux
+203531400047_R06C02  203531400047  R06C02  /Users/apple/Downloads/  0

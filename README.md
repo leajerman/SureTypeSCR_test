@@ -76,13 +76,17 @@ df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
 
 locus <- locus_ma(df,'rs3128117')
 
+am <- sample_ma(df,'Kit4_4mos_SC21','1')
+
 ```
+
+
 
 ### PCA
 
 ```{r PCA}
 
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
 
 pca_all <- pca_samples(df,th=0.1)
 
@@ -144,14 +148,11 @@ result_end <- trainer$predict_decorate(result_gda,clftype='rf-gda')
 # Save the results
 
 After prediction, we can save the results
+
 ```{r doincr}
-result_end$save_complete_table('fulltable.txt',header=TRUE)
 
-result_end$save_mode('recall','recall.txt',header=FALSE) 
+scsave(result_end,'recall.txt',clftype='rf',threshold=0.15,all=FALSE)
 
-result_end$save_mode('precision','precision.txt',header=FALSE) 
-
-result_end$save_mode('standard','standard.txt',header=FALSE) 
 ```
 
 

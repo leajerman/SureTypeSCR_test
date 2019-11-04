@@ -3,7 +3,7 @@
 \title{Predictions from Random Forest classifier or Gaussian Discriminant Analysis}
 \usage{
 
-clf_rf$predict_decorate(test,clftype='rf')
+scpredict(clf_rf,test,clftype='rf')
 
 }
 
@@ -61,25 +61,25 @@ clf_rf <- scload(clf_rf_path)
 clf_gda <- scload(clf_gda_path) 
 
 # get genotyping data from gtc files and meta file
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
  
 # create Data object and rearrange the index 
 dfs <- create_from_frame(df) 
 
 # extract the chromosomes 1 and 2
-dfs$restrict_chromosomes(c('1','2')) 
+dfs <- restrict_chrom(dfs,c('1','2')) 
 
 # mask the Gencall score lower than 0.01
-dfs$apply_NC_threshold_3(0.01) 
+dfs <- apply_thresh(dfs,0.01) 
 
 # calculate the m and a feature
-dfs$calculate_transformations_2() 
+dfs <- calculate_ma(dfs) 
 
 # prediction by Random Forest
-result_rf <- clf_rf$predict_decorate(dfs,clftype='rf') 
+result_rf <- scpredict(clf_rf,dfs,clftype='rf')
 
 # prediction by Guassian Discriminate Analysis
-result_gda <- clf_gda$predict_decorate(dfs,clftype='gda') 
+result_gda <- scpredict(clf_gda,dfs,clftype='gda')
 
 
 }

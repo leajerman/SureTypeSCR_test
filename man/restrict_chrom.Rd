@@ -1,33 +1,39 @@
-\name{create_from_frame}
-\alias{create_from_frame}
-\title{convert pandas dataframe to Data object}
+\name{restrict_chrom}
+\alias{restrict_chrom}
+\title{To choose certain chromosomes with Data object}
 \usage{
-create_from_frame(df)
+restrict_chrom(df,chrom)
 }
 \arguments{
-\item{df}{genotyping pandas dataframe from scbasic function}
-
+\item{df}{the pandas dataframe from GenomeStudio or scbasic function}
+\item{chrom}{the list of selected chromosomes}
 }
 \value{
-Data object with index rearrangement (multi-leve index)
+Data object only with certain chromosomes
+}
 
-}
 \description{
-Convert pandas dataframe to Data object and rearrange the index level
+To choose certain chromosomes with Data object
 }
+%\description{
+%
+%}
 \examples{
+
+# parsing file from gtc raw files
 
 gtc_path = system.file("files/GTCs",package='SureTypeSCR')
 cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
 manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 
-# get genotyping data from gtc files and meta file
 df <- scbasic(manifest_path,cluster_path,samplesheet)
 
-
-# create Data object and rearrange the index
 df <- create_from_frame(df)
+
+df <- restrict_chrom(df,c('1','2'))
+
+
 
 
 }

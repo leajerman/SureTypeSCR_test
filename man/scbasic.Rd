@@ -2,18 +2,16 @@
 \alias{scbasic}
 \title{Function to process raw gtc data and meta data without genomestudio}
 \usage{
-scbasic(gtc_path, manifest_path, cluster_path, samplesheet_path, delimiter)
+scbasic(bpm,egt,samplesheet)
 }
 \arguments{
-\item{gtc_path}{a pathname to gtc folder}
 
-\item{manifest_path}{a pathname to manifest file}
+\item{bpm}{a pathname to manifest file}
 
-\item{cluster_path}{a pathname to cluster file}
+\item{egt}{a pathname to cluster file}
 
-\item{samplesheet_path}{a pathname to samplesheet file}
+\item{samplesheet}{a pathname to samplesheet file}
 
-\item{delimiter}{ tab is the most common used}
 }
 \value{
 pandas data frame of genotyping data 
@@ -28,7 +26,7 @@ manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSC
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 
 # get genotyping data from gtc files and meta file
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
 
 #/Users/apple/anaconda3/envs/gtc2/lib/python2.7/site-packages/sklearn/ensemble/weight_boosting.py:29: 
 #DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. 

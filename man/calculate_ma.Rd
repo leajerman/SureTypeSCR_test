@@ -1,33 +1,38 @@
-\name{create_from_frame}
-\alias{create_from_frame}
-\title{convert pandas dataframe to Data object}
+\name{calculate_ma}
+\alias{calculate_ma}
+\title{To calculate m and a features}
 \usage{
-create_from_frame(df)
+calculate_ma(df)
 }
 \arguments{
-\item{df}{genotyping pandas dataframe from scbasic function}
-
+\item{df}{the pandas dataframe from GenomeStudio or scbasic function}
 }
 \value{
-Data object with index rearrangement (multi-leve index)
+Data object with adding m and a features
+}
 
-}
 \description{
-Convert pandas dataframe to Data object and rearrange the index level
+To calculate m and a features
 }
+%\description{
+%
+%}
 \examples{
+
+# parsing file from gtc raw files
 
 gtc_path = system.file("files/GTCs",package='SureTypeSCR')
 cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
 manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 
-# get genotyping data from gtc files and meta file
 df <- scbasic(manifest_path,cluster_path,samplesheet)
 
-
-# create Data object and rearrange the index
 df <- create_from_frame(df)
+
+dfs <- calculate_ma(df)
+
+
 
 
 }

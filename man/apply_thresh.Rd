@@ -1,33 +1,39 @@
-\name{create_from_frame}
-\alias{create_from_frame}
-\title{convert pandas dataframe to Data object}
+\name{apply_thresh}
+\alias{apply_thresh}
+\title{To apply threshold over all samples on GenCall score}
 \usage{
-create_from_frame(df)
+apply_thresh(df,th)
 }
 \arguments{
-\item{df}{genotyping pandas dataframe from scbasic function}
-
+\item{df}{the pandas dataframe from GenomeStudio or scbasic function}
+\item{th}{the threshold}
 }
 \value{
-Data object with index rearrangement (multi-leve index)
+Data object only with applied threshold
+}
 
-}
 \description{
-Convert pandas dataframe to Data object and rearrange the index level
+To apply threshold over all samples on GenCall score
 }
+%\description{
+%
+%}
 \examples{
+
+# parsing file from gtc raw files
 
 gtc_path = system.file("files/GTCs",package='SureTypeSCR')
 cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
 manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 
-# get genotyping data from gtc files and meta file
 df <- scbasic(manifest_path,cluster_path,samplesheet)
 
-
-# create Data object and rearrange the index
 df <- create_from_frame(df)
+
+df <- apply_thresh(df,0.01)
+
+
 
 
 }
