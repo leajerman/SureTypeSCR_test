@@ -52,14 +52,14 @@ clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',packa
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
 
 ```{r dota}
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
 ```
 
 ## GTC data quality check
 ### call rate over all samples
 
 ```{r call}
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
 
 callrate_allsamples <- callrate(df,th=0.3)
 
@@ -72,7 +72,7 @@ geno_freq <- allele_freq(df,th=0.01)
 ### M ans A features calculate of one locus
 
 ```{r locus}
-df <- scbasic(manifest_path,cluster_path,samplesheet,'\t')
+df <- scbasic(manifest_path,cluster_path,samplesheet)
 
 locus <- locus_ma(df,'rs3128117')
 
