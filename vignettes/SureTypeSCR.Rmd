@@ -140,8 +140,8 @@ dfs <- calculate_ma(dfs)
 clf_rf <- scload(clf_rf_path)
 clf_gda <- scload(clf_gda_path)
 
-result_rf <- clf_rf$predict_decorate(dfs, clftype='rf')
-result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
+result_rf <- scpredict(clf_rf, dfs, clftype='rf')
+result_gda <- scpredict(clf_gda, result_rf, clftype='gda')
 
 ```
 
@@ -150,7 +150,7 @@ result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
 ```{r dopt}
 trainer <- scTrain(result_rf,clfname='gda')
 
-result_end <- trainer$predict_decorate(result_gda,clftype='rf-gda') 
+result_end <- scpredict(trainer, result_gda,clftype='rf-gda') 
 
 ```
 

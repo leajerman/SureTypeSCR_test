@@ -4,7 +4,7 @@ Description: SureTypeSCR is the implementation of algorithm for regenotyping of 
 Version: 0.99.0
 Author: Ivan Vogel, Lishan Cai
 Suggests: testthat
-Depends: R (>= 3.5.0), reticulate, knitr
+Depends: R (>= 3.5.0), reticulate, knitr, BiocStyle
 Maintainer: Lishan Cai <Lishan@sund.dk.com>
 License: Artistic-2.0
 biocViews: Software, GenotypingArray,SingleCell

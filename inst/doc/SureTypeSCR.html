@@ -223,7 +223,7 @@ summary {
 
 <h1 class="title toc-ignore">SureTypeSCR – Implementation of algorithm for regenotyping of single cell data.</h1>
 <p class="author-name">Ivan Vogel, Lishan Cai</p>
-<h4 class="date">十月 28, 2019</h4>
+<h4 class="date">十一月 05, 2019</h4>
 
 </div>
 
@@ -279,13 +279,13 @@ clf_gda_path =<span class="st"> </span><span class="kw">system.file</span>(<span
 </div>
 <div id="to-process-the-raw-gtc-files-without-genomesutdio-we-can-use-scbasic." class="section level2">
 <h2><span class="header-section-number">1.3</span> To process the raw gtc files without genomesutdio, we can use scbasic.</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet)</code></pre></div>
 </div>
 <div id="gtc-data-quality-check" class="section level2">
 <h2><span class="header-section-number">1.4</span> GTC data quality check</h2>
 <div id="call-rate-over-all-samples" class="section level3">
 <h3><span class="header-section-number">1.4.1</span> call rate over all samples</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet)
 
 callrate_allsamples &lt;-<span class="st"> </span><span class="kw">callrate</span>(df,<span class="dt">th=</span><span class="fl">0.3</span>)
 
@@ -295,13 +295,15 @@ geno_freq &lt;-<span class="st"> </span><span class="kw">allele_freq</span>(df,<
 </div>
 <div id="m-ans-a-features-calculate-of-one-locus" class="section level3">
 <h3><span class="header-section-number">1.4.2</span> M ans A features calculate of one locus</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet)
 
-locus &lt;-<span class="st"> </span><span class="kw">locus_ma</span>(df,<span class="st">'rs3128117'</span>)</code></pre></div>
+locus &lt;-<span class="st"> </span><span class="kw">locus_ma</span>(df,<span class="st">'rs3128117'</span>)
+
+am &lt;-<span class="st"> </span><span class="kw">sample_ma</span>(df,<span class="st">'Kit4_4mos_SC21'</span>,<span class="st">'1'</span>)</code></pre></div>
 </div>
 <div id="pca" class="section level3">
 <h3><span class="header-section-number">1.4.3</span> PCA</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet,<span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">scbasic</span>(manifest_path,cluster_path,samplesheet)
 
 pca_all &lt;-<span class="st"> </span><span class="kw">pca_samples</span>(df,<span class="dt">th=</span><span class="fl">0.1</span>)
 
@@ -416,27 +418,20 @@ dfs &lt;-<span class="st"> </span><span class="kw">calculate_ma</span>(dfs) </co
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clf_rf &lt;-<span class="st"> </span><span class="kw">scload</span>(clf_rf_path)
 clf_gda &lt;-<span class="st"> </span><span class="kw">scload</span>(clf_gda_path)
 
-result_rf &lt;-<span class="st"> </span>clf_rf<span class="op">$</span><span class="kw">predict_decorate</span>(dfs, <span class="dt">clftype=</span><span class="st">'rf'</span>)
-result_gda &lt;-<span class="st"> </span>clf_gda<span class="op">$</span><span class="kw">predict_decorate</span>(result_rf,<span class="dt">clftype=</span><span class="st">'gda'</span>)</code></pre></div>
+result_rf &lt;-<span class="st"> </span><span class="kw">scpredict</span>(clf_rf, dfs, <span class="dt">clftype=</span><span class="st">'rf'</span>)
+result_gda &lt;-<span class="st"> </span><span class="kw">scpredict</span>(clf_gda, result_rf, <span class="dt">clftype=</span><span class="st">'gda'</span>)</code></pre></div>
 </div>
 <div id="to-train-the-cascade-of-random-forest-and-guassian-discriminant-analysis" class="section level2">
 <h2><span class="header-section-number">2.2</span> To train the cascade of Random Forest and Guassian Discriminant Analysis:</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">trainer &lt;-<span class="st"> </span><span class="kw">scTrain</span>(result_rf,<span class="dt">clfname=</span><span class="st">'gda'</span>)
 
-result_end &lt;-<span class="st"> </span>trainer<span class="op">$</span><span class="kw">predict_decorate</span>(result_gda,<span class="dt">clftype=</span><span class="st">'rf-gda'</span>) </code></pre></div>
+result_end &lt;-<span class="st"> </span><span class="kw">scpredict</span>(trainer, result_gda,<span class="dt">clftype=</span><span class="st">'rf-gda'</span>) </code></pre></div>
 </div>
 </div>
 <div id="save-the-results" class="section level1">
 <h1><span class="header-section-number">3</span> Save the results</h1>
 <p>After prediction, we can save the results</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_complete_table</span>(<span class="st">'fulltable.txt'</span>,<span class="dt">header=</span><span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## None</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_mode</span>(<span class="st">'recall'</span>,<span class="st">'recall.txt'</span>,<span class="dt">header=</span><span class="ot">FALSE</span>) </code></pre></div>
-<pre><code>## None</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_mode</span>(<span class="st">'precision'</span>,<span class="st">'precision.txt'</span>,<span class="dt">header=</span><span class="ot">FALSE</span>) </code></pre></div>
-<pre><code>## None</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result_end<span class="op">$</span><span class="kw">save_mode</span>(<span class="st">'standard'</span>,<span class="st">'standard.txt'</span>,<span class="dt">header=</span><span class="ot">FALSE</span>) </code></pre></div>
-<pre><code>## None</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scsave</span>(result_end,<span class="st">'recall.txt'</span>,<span class="dt">clftype=</span><span class="st">'rf'</span>,<span class="dt">threshold=</span><span class="fl">0.15</span>,<span class="dt">all=</span><span class="ot">FALSE</span>)</code></pre></div>
 </div>
 <div id="conclusions" class="section level1">
 <h1><span class="header-section-number">4</span> Conclusions</h1>
