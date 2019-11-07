@@ -10,7 +10,7 @@ R CMD INSTALL SureTypeSCR_0.99.0.tar.gz
 
 or the other way is possible (only if this repository is public)
 ```
-devtools::install_github('Meiomap/SureTypeSCR’, build_vignettes = TRUE)
+devtools::install_github('Meiomap/SureTypeSCR', build_vignettes = TRUE)
 ```
 
 
