@@ -167,7 +167,18 @@ scsave(result_end,'recall.txt',clftype='rf',threshold=0.15,all=FALSE)
 
 ```
 
+```
+The program enriches every sample in the input data by :
 
+| Subcolumn name  | Meaning |
+| ------------- | ------------- |
+| rf_ratio:1_pred  | Random Forest prediction (binary)  |
+| rf_ratio:1_prob  | Random Forest Score for the positive class |
+| gda_ratio:1_prob | Gaussian Discriminant Analysis score for the positive class  | 
+| gda_ratio:1_pred | Gaussian Disciminant Analysis prediction (binary) | 
+| rf-gda_ratio:1_prob | combined 2-layer RF and GDA - probability score for the positive class | 
+| rf-gda_ratio:1_pred | binary prediction of RF-GDA | 
+```
 
 
 
