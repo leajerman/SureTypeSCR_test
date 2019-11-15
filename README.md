@@ -55,8 +55,8 @@ for natural use in each language. SureTypeSCR package includes test data. Users 
 cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
 manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
-clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
-clf_gda_path = system.file('files/clf_GDA_7228_ratio1_58cells.clf',package='SureTypeSCR')
+clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR') [pre-trained rf classifier]
+clf_gda_path = system.file('files/clf_GDA_7228_ratio1_58cells.clf',package='SureTypeSCR') [pre-trained gda classifier]
 ```
 
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
@@ -164,6 +164,12 @@ After prediction, we can save the results
 ```{r doincr}
 
 scsave(result_end,'recall.txt',clftype='rf',threshold=0.15,all=FALSE)
+
+recall mode: clftype = 'rf'; threshold = 0.15
+
+standard mode: clftype = 'rf-gda';  threshold = 0.15
+
+precision mode: clftype = 'rf-gda'; threshold = 0.75
 
 ```
 
