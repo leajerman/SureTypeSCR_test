@@ -1,3 +1,10 @@
+# dependencies
+SureTypeSC (https://github.com/Meiomap/SureTypeSC_2) [python package]
+reticulate (https://rstudio.github.io/reticulate/) [r package]
+knitr(https://github.com/yihui/knitr) [r package]
+BiocStyle(https://bioconductor.org/packages/release/bioc/html/BiocStyle.html) [r package]
+
+
 # Installation
 
 After downloading and unpacking the package and rename the fold to be SureTypeSCR, run the command line below to install the R package SureTypeSCR
