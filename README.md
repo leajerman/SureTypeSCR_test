@@ -79,12 +79,10 @@ geno_freq <- allele_freq(df,th=0.5)
 
 ```
 
-### M ans A features calculation of one locus or chromosomes
+### M ans A features calculation of chromosomes
 
 ```{r locus}
 df <- scbasic(manifest_path,cluster_path,samplesheet)
-
-locus <- locus_ma(df,'rs3128117')
 
 am <- sample_ma(df,'Kit4_4mos_SC21','1')
 
