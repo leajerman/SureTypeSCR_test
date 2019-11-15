@@ -41,7 +41,6 @@ modules including numpy, pandas and SureTypeSC.
 
 ```{r loadup}
 library(SureTypeSCR)
-scall = scEls()
 ```
 
 
@@ -50,14 +49,14 @@ scall = scEls()
 
 The reticulate package is designed to limit the amount
 of effort required to convert data from R to python
-for natural use in each language. SureTypeSCR package includes test data.
+for natural use in each language. SureTypeSCR package includes test data. Users can play with the test data.
 
 ```{r doimp}
 cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
 manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
 samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
 clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
-clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
+clf_gda_path = system.file('files/clf_GDA_7228_ratio1_58cells.clf',package='SureTypeSCR')
 ```
 
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
@@ -76,7 +75,7 @@ callrate_allsamples <- callrate(df,th=0.3)
 
 callrate_onechr <- callrate_chr(df,'X', th=0.15)
 
-geno_freq <- allele_freq(df,th=0.01)
+geno_freq <- allele_freq(df,th=0.5)
 
 ```
 
@@ -105,7 +104,7 @@ pca_onechr <- pca_chr(df,'X',th=0.1)
 ```
 
 
-## To convert pandas dataframe to Data object and rearrange the index to multi-index leve,
+## To convert pandas dataframe to Data object and rearrange the index to multi-index level,
 we use create_from_frame. And users can check the valuse by specifiy the 'df' attribution.
 ```{r dotinde}
 dfs <- create_from_frame(df)
@@ -141,8 +140,8 @@ dfs <- calculate_ma(dfs)
 clf_rf <- scload(clf_rf_path)
 clf_gda <- scload(clf_gda_path)
 
-result_rf <- clf_rf$predict_decorate(dfs, clftype='rf')
-result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
+result_rf <- scpredict(clf_rf, dfs, clftype='rf')
+result_gda <- scpredict(clf_gda,result_rf,clftype='gda')
 
 ```
 
@@ -151,7 +150,7 @@ result_gda <- clf_gda$predict_decorate(result_rf,clftype='gda')
 ```{r dopt}
 trainer <- scTrain(result_rf,clfname='gda')
 
-result_end <- trainer$predict_decorate(result_gda,clftype='rf-gda') 
+result_end <- scpredict(trainer,result_gda,clftype='rf-gda') 
 
 ```
 
