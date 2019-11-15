@@ -8,7 +8,7 @@ scpredict(clf,test,clftype='rf')
 }
 
 \arguments{
-\item{clf_rf}{classifier load by using scload}
+\item{clf}{classifier load by using scload}
 \item{test}{Data object including m and a feature}
 \item{clftype}{The type of classifier 
 (rf: Random Forest; 
