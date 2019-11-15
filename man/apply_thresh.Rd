@@ -5,7 +5,7 @@
 apply_thresh(df,th)
 }
 \arguments{
-\item{df}{the pandas dataframe from GenomeStudio or scbasic function}
+\item{df}{the Data object from create_from_frame function}
 \item{th}{the threshold}
 }
 \value{

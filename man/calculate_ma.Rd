@@ -5,7 +5,7 @@
 calculate_ma(df)
 }
 \arguments{
-\item{df}{the pandas dataframe from GenomeStudio or scbasic function}
+\item{df}{the Data object from create_from_frame function}
 }
 \value{
 Data object with adding m and a features

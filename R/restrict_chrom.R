@@ -1,4 +1,4 @@
 restrict_chrom = function(df,chrom) {
- df$restrict_chromosomes(c('1','2'))
+ df$restrict_chromosomes(chrom)
  re <- df
 }

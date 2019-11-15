@@ -79,7 +79,7 @@ geno_freq <- allele_freq(df,th=0.5)
 
 ```
 
-### M ans A features calculate of one locus
+### M ans A features calculation of one locus or chromosomes
 
 ```{r locus}
 df <- scbasic(manifest_path,cluster_path,samplesheet)
@@ -141,8 +141,9 @@ clf_rf <- scload(clf_rf_path)
 clf_gda <- scload(clf_gda_path)
 
 result_rf <- scpredict(clf_rf, dfs, clftype='rf')
+result_rf$df (to monitor the data frame)
 result_gda <- scpredict(clf_gda,result_rf,clftype='gda')
-
+result_gda$df (to monitor the data frame)
 ```
 
 ## To train the cascade of Random Forest and Guassian Discriminant Analysis:
@@ -151,6 +152,7 @@ result_gda <- scpredict(clf_gda,result_rf,clftype='gda')
 trainer <- scTrain(result_rf,clfname='gda')
 
 result_end <- scpredict(trainer,result_gda,clftype='rf-gda') 
+result_end$df (to monitor the data frame)
 
 ```
 

@@ -3,7 +3,7 @@
 \title{Predictions from Random Forest classifier or Gaussian Discriminant Analysis}
 \usage{
 
-scpredict(clf_rf,test,clftype='rf')
+scpredict(clf,test,clftype='rf')
 
 }
 
