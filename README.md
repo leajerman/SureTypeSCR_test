@@ -14,7 +14,6 @@
 After downloading and unpacking the package and rename the fold to be SureTypeSCR, run the command line below to install the R package SureTypeSCR
 
 ```
-R CMD build SureTypeSCR
 
 R CMD INSTALL SureTypeSCR_0.99.0.tar.gz
 ```
@@ -52,11 +51,11 @@ of effort required to convert data from R to python
 for natural use in each language. SureTypeSCR package includes test data. Users can play with the test data.
 
 ```{r doimp}
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
-clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR') [pre-trained rf classifier]
-clf_gda_path = system.file('files/clf_GDA_7228_ratio1_58cells.clf',package='SureTypeSCR') [pre-trained gda classifier]
+cluster_path <- system.file('files/HumanKaryomap-12v1_A.egt', package = 'SureTypeSCR')
+manifest_path <- system.file('files/HumanKaryomap-12v1_A.bpm', package = 'SureTypeSCR')
+samplesheet <- system.file('files/Samplesheetr.csv', package = 'SureTypeSCR')
+clf_rf_path <- system.file('files/clf_30trees_7228_ratio1_lightweight.clf', package = 'SureTypeSCR') # pre-trained rf classifier
+clf_gda_path <- system.file('files/clf_GDA_7228_ratio1_58cells.clf', package = 'SureTypeSCR') # pre-trained gda classifier
 ```
 
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
