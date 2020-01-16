@@ -83,6 +83,12 @@ trainer <- scTrain(result_rf,clfname='gda')
 result_end <- scpredict(trainer,result_gda,clftype='rf-gda') 
 
 
+call <- sc_callrate(result_end,'rf-gda',0.1)
+call_1 <- sc_callrate_chr(result_end,'rf-gda',0.1,'1')
+
+freq <- sc_allele_freq(result_end,'rf-gda',0.1)
+freq_1 <- sc_chr_freq(result_end,'rf-gda',0.1,'1')
+
 ## ----doincr----------------------------------------------------------------
 #result_end$save_complete_table('fulltable.txt',header=TRUE)
 
