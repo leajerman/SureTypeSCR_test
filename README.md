@@ -116,6 +116,14 @@ values$dtypes
 
 values['sc21']['score'][900:1200]
 
+call <- sc_allele_freq(df,'score',0.2)
+
+call_rate <- sc_callrate(df,'score',0.2)
+
+call_rate_chr <- sc_callrate_chr(df,'score',0.2,'21')
+
+call_chr_freq <- sc_chr_freq(df,'score',0.2,'21')
+
 
 ```
 
