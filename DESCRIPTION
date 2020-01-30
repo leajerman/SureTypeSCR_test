@@ -7,6 +7,10 @@ Suggests: testthat
 Depends: R (>= 3.5.0), reticulate, knitr, BiocStyle
 Maintainer: Lishan Cai <Lishan@sund.dk.com>
 License: Artistic-2.0
+Imports:
+	reticulate,
+	knitr,
+	BiocStyle
 biocViews: Software, GenotypingArray,SingleCell
 VignetteBuilder: knitr
 SystemRequirements: python (>= 2.7), sklearn, numpy, pandas,
