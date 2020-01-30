@@ -7,7 +7,7 @@ DATE,19/10/2016 00:00,,,
 A,HumanKaryomap-12v1_A,,,
 [Data],,,,
 Sample_ID,SentrixBarcode_A,SentrixPosition_A,Path,Aux
-Kit4_4mos_SC21,9968648019,R06C01,/Users/apple/BeadArrayFiles-develop/library/Lishan/SingleCellExampleData/GTCs,0
-Kit4_4mos_SC22,9968648019,R06C02,/Users/apple/BeadArrayFiles-develop/library/Lishan/SingleCellExampleData/GTCs,0
+Kit4_4mos_SC21,9968648019,R06C01,./SureTypeSCR/inst/files/GTCs,0
+Kit4_4mos_SC22,9968648019,R06C02,./SureTypeSCR/inst/files/GTCs,0
 
 
