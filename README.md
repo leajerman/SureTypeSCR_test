@@ -50,13 +50,8 @@ The reticulate package is designed to limit the amount
 of effort required to convert data from R to python
 for natural use in each language. SureTypeSCR package includes test data. Users can play with the test data.
 
-```{r doimp}
-cluster_path <- system.file('files/HumanKaryomap-12v1_A.egt', package = 'SureTypeSCR')
-manifest_path <- system.file('files/HumanKaryomap-12v1_A.bpm', package = 'SureTypeSCR')
-samplesheet <- system.file('files/Samplesheetr.csv', package = 'SureTypeSCR')
-clf_rf_path <- system.file('files/clf_30trees_7228_ratio1_lightweight.clf', package = 'SureTypeSCR') # pre-trained rf classifier
-clf_gda_path <- system.file('files/clf_GDA_7228_ratio1_58cells.clf', package = 'SureTypeSCR') # pre-trained gda classifier
-```
+
+
 
 ## To process the raw gtc files without genomesutdio, we can use scbasic.
 
@@ -83,7 +78,7 @@ geno_freq <- allele_freq(df,th=0.5)
 ```{r locus}
 df <- scbasic(manifest_path,cluster_path,samplesheet)
 
-am <- sample_ma(df,'Kit4_4mos_SC21','1')
+am <- sample_ma(df,sample_name,'1')
 
 ```
 
