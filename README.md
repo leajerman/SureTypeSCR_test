@@ -14,6 +14,7 @@
 After downloading and unpacking the package and rename the fold to be SureTypeSCR, run the command line below to install the R package SureTypeSCR
 
 ```
+R CMD BUILD SureTypeSCR 
 
 R CMD INSTALL SureTypeSCR_0.99.0.tar.gz
 ```
