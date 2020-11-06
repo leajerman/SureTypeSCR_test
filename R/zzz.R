@@ -1,6 +1,8 @@
 .onAttach <- function(libname, pkgname) {
   # delay load foo module (will only be loaded when accessed via $)
   packageStartupMessage("checking python library availability...")
+  chk <- as.numeric(py_config()['version'])
+  if (chk < 3) stop('The python environment 2. is not compatible, please use python3 environment')
   chk <- try(import("SureTypeSC"))
   if (inherits(chk, "try-error")) stop("SureTypeSC not found in python environment")
   chk <- try(import("numpy"))
