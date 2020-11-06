@@ -2,7 +2,10 @@
   # delay load foo module (will only be loaded when accessed via $)
   packageStartupMessage("checking python library availability...")
   chk <- as.numeric(py_config()['version'])
-  if (chk < 3) stop('The python environment 2. is not compatible, please use python3 environment')
+  if (chk < 3) stop('The python environment 2. is not compatible, please use python3 environment.' ,'\n','\n',
+    'The possible python versions in local computer:','\n',py_config()['python_versions'], '\n','\n',
+    'you can specify certain python environment by using','\n', 'use_python("yourpath/python")','\n','\n',
+    'for more details: https://rstudio.github.io/reticulate/articles/versions.html#configuration-info-1')
   chk <- try(import("SureTypeSC"))
   if (inherits(chk, "try-error")) stop("SureTypeSC not found in python environment")
   chk <- try(import("numpy"))
