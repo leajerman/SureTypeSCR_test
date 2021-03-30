@@ -1,94 +1,89 @@
-## ----dsetup,echo=FALSE,results="hide",include=FALSE---------------------------
-suppressPackageStartupMessages({
+## ----dsetup,echo=TRUE,results="hide",include=FALSE----------------------------
+Sys.setenv(RETICULATE_PYTHON='C:\\Users\\gqc954\\AppData\\Local\\Programs\\Python\\Python39')
 library(SureTypeSCR)
 library(BiocStyle)
-})
+library(googledrive)
+library(tidyverse)
+library(magrittr)
 
-## ----loadup-------------------------------------------------------------------
-library(SureTypeSCR)
-scEls()
+## ----doimpe,results="hide",message=FALSE--------------------------------------
+#download classifier CLASSIFIERS.zip
+drive_download(as_id('1wBPSMQiuY50Zct9Re2LkqaQgHwuu0k6k'),overwrite=TRUE)
 
-## ----doimp--------------------------------------------------------------------
-#gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-#cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-#manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-#samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
-#clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
-#clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
+#download testing data TESTING_DATA_2SAMPLES.zip
+drive_download(as_id('1SUDvgEyynXuAmgECHVrzx6pPoJ5PnNy1'),overwrite=TRUE)
+
+unzip('CLASSIFIERS.zip')
+unzip('TESTING_DATA_2SAMPLES.zip')
+
+gtc_path = 'TESTING_DATA_2SAMPLES/GTCs'
+cluster_path = 'TESTING_DATA_2SAMPLES/HumanKaryomap-12v1_A.egt'
+manifest_path = 'TESTING_DATA_2SAMPLES/HumanKaryomap-12v1_A.bpm'
+samplesheet_path = 'TESTING_DATA_2SAMPLES/Samplesheetr.csv'
+clf_rf_path = 'CLASSIFIERS/clf_30trees_7228_ratio1_lightweight.clf'
+
 
 ## ----dota---------------------------------------------------------------------
-#df <- scbasic(manifest_path,cluster_path,samplesheet)
+df <- scbasic_IV(samplesheet=samplesheet_path,
+                 bpm=manifest_path,
+                 egt=cluster_path)
+
+head(df)
 
 
 ## ----call---------------------------------------------------------------------
-#df <- scbasic(manifest_path,cluster_path,samplesheet)
+df %>% callrate_IV()
 
-#callrate_allsamples <- callrate(df,th=0.3)
+## ----threshold----------------------------------------------------------------
+df %>% get_threshold()
 
-#callrate_onechr <- callrate_chr(df,'X', th=0.15)
+## ----call2--------------------------------------------------------------------
+df %>% 
+  group_by(individual)  %>% 
+  callrate_IV()
 
-#geno_freq <- allele_freq(df,th=0.01)
+
+## ----call3--------------------------------------------------------------------
+
+df %>% 
+  group_by(individual,Chr,gtype) %>% 
+  callrate_IV()
+
+## ----call4--------------------------------------------------------------------
+df %>% 
+  group_by(individual,Chr,gtype) %>% 
+  callrate_IV() %>% 
+  pivot_wider(names_from=gtype,values_from=Callrate)
 
 
-## ----locus--------------------------------------------------------------------
-#df <- scbasic(manifest_path,cluster_path,samplesheet)
+## ----call5--------------------------------------------------------------------
+df %>% 
+  set_threshold(clfcol = 'score',threshold = 0.5) %>% 
+  group_by(individual) %>% 
+  callrate_IV() 
 
-#locus <- locus_ma(df,'rs3128117')
 
-#am <- sample_ma(df,'Kit4_4mos_SC21','1')
+## ----ma-----------------------------------------------------------------------
+df %>% calculate_ma_IV() %>% head()
+#head(df)
+
+## ----plotma-------------------------------------------------------------------
+#df %>% set_threshold(clfcol='score',threshold=0.5) %>% plot_ma()
+ma_plot=df %>% plot_ma()
+ma_plot
+
 
 
 ## ----PCA----------------------------------------------------------------------
+pca_plot = df %>% plot_pca(feat=c('gtype'))
+pca_plot
 
-#df <- scbasic(manifest_path,cluster_path,samplesheet)
+## ----clfload------------------------------------------------------------------
+clf_rf= scload('CLASSIFIERS/clf_30trees_7228_ratio1_lightweight.clf')
 
-#pca_all <- pca_samples(df,th=0.1)
+## ----class--------------------------------------------------------------------
+df %<>% predict_suretype(clf_rf)
 
-#pca_onechr <- pca_chr(df,'X',th=0.1)
-
-## ----dotinde------------------------------------------------------------------
-#dfs <- create_from_frame(df)
-
-#values <- dfs$df
-
-#values$shape
-
-#values$columns
-
-#values$dtypes
-
-#values['sc21']['score'][900:1200]
-
-
-
-## ----dotx---------------------------------------------------------------------
-#dfs <- restrict_chrom(dfs,c('1','2'))
-#dfs <- apply_thresh(dfs,0.01)
-#dfs <- calculate_ma(dfs) 
-
-
-## ----dorpart------------------------------------------------------------------
-#clf_rf <- scload(clf_rf_path)
-#clf_gda <- scload(clf_gda_path)
-
-#result_rf <- scpredict(clf_rf, dfs, clftype='rf')
-#result_gda <- scpredict(clf_gda, result_rf, clftype='gda')
-
-
-## ----dopt---------------------------------------------------------------------
-#trainer <- scTrain(result_rf,clfname='gda')
-
-#result_end <- scpredict(trainer, result_gda,clftype='rf-gda') 
-
-
-#call <- sc_callrate(result_end,'rf-gda',0.1)
-#call_1 <- sc_callrate_chr(result_end,'rf-gda',0.1,'1')
-
-#freq <- sc_allele_freq(result_end,'rf-gda',0.1)
-#freq_1 <- sc_chr_freq(result_end,'rf-gda',0.1,'1')
-
-## ----doincr-------------------------------------------------------------------
-
-
-#scsave(result_end,'recall.txt',clftype='rf',threshold=0.15,all=FALSE)
+## ----class_view---------------------------------------------------------------
+df %>% filter(Chr==1) %>% head()
 
