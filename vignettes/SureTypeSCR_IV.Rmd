@@ -1,0 +1,149 @@
+---
+title: "SureTypeSCR -- Implementation of algorithm for regenotyping of single cell data."
+author: "Ivan Vogel, Lishan Cai"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{SureTypeSCR overview}
+  %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::html_document:
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+# Introduction
+
+A key motivation of SureTypeSCR is that accurate genotyping of DNA from a single cell is required for application such as de novo mutation detection and linkage analysis, but achieving high precision genotyping in the single cell environment is challenging due to the errors caused by whole genome amplification. 
+
+SureTypeSCR, based on python, is a two-stage machine learning algorithm that filters a substantial part of the noise, thereby retaining of the majority of
+the high quality SNPs. SureTypeSCR consists of two layers, Random Forest (RF) and Gaussian Discriminant Analysis (GDA).
+
+# Basic concepts
+## Loading dependencies
+Make sure to replace the path in `Sys.setenv` to your python interpreter path (command `which python` on Linux/Mac or `where python` on Windows will give you the path)
+```{r dsetup,echo=TRUE,results="hide",include=FALSE}
+Sys.setenv(RETICULATE_PYTHON='C:\\Users\\gqc954\\AppData\\Local\\Programs\\Python\\Python39')
+library(SureTypeSCR)
+library(BiocStyle)
+library(googledrive)
+library(tidyverse)
+library(magrittr)
+```
+
+## Downloading testing data and classifiers
+
+```{r doimpe,results="hide",message=FALSE}
+#download classifier CLASSIFIERS.zip
+drive_download(as_id('1wBPSMQiuY50Zct9Re2LkqaQgHwuu0k6k'),overwrite=TRUE)
+
+#download testing data TESTING_DATA_2SAMPLES.zip
+drive_download(as_id('1SUDvgEyynXuAmgECHVrzx6pPoJ5PnNy1'),overwrite=TRUE)
+
+unzip('CLASSIFIERS.zip')
+unzip('TESTING_DATA_2SAMPLES.zip')
+
+gtc_path = 'TESTING_DATA_2SAMPLES/GTCs'
+cluster_path = 'TESTING_DATA_2SAMPLES/HumanKaryomap-12v1_A.egt'
+manifest_path = 'TESTING_DATA_2SAMPLES/HumanKaryomap-12v1_A.bpm'
+samplesheet_path = 'TESTING_DATA_2SAMPLES/Samplesheetr.csv'
+clf_rf_path = 'CLASSIFIERS/clf_30trees_7228_ratio1_lightweight.clf'
+
+```
+
+## Loading the raw genotypes into data frame
+
+```{r dota}
+df <- scbasic_IV(samplesheet=samplesheet_path,
+                 bpm=manifest_path,
+                 egt=cluster_path)
+
+head(df)
+
+```
+
+## Quality check
+### Call rate per sample
+
+```{r call}
+df %>% callrate_IV()
+```
+
+The genotypes from GTC files are sometimes preprocessed with certain GenCall score threshold. Threshold > 0 generally means the data has been subjected to quality control in one of the previous steps and is truncated (genotypes with score lower than threshold are set to NC). QC usually occurs during IDAT -> GTC and the Gencall score threshold is often 0.15 which is Illumina's recommended value for bulk DNA. It is advised to use GTC files with GenCall score threshold set to 0 and then subsequently use the built-in classifier. This maximizes recall. 
+
+```{r threshold}
+df %>% get_threshold()
+```
+
+It is possible to retrieve call rates by group, i.e. by individual.
+```{r call2}
+df %>% 
+  group_by(individual)  %>% 
+  callrate_IV()
+
+```
+... or more complex group-by operations with multiple factors
+```{r call3}
+
+df %>% 
+  group_by(individual,Chr,gtype) %>% 
+  callrate_IV()
+```
+It is perhaps convenient to pivot some of the grouped features to get better overview of the results
+```{r call4}
+df %>% 
+  group_by(individual,Chr,gtype) %>% 
+  callrate_IV() %>% 
+  pivot_wider(names_from=gtype,values_from=Callrate)
+
+```
+
+User can set own threshold which affects callrate:
+```{r call5}
+df %>% 
+  set_threshold(clfcol = 'score',threshold = 0.5) %>% 
+  group_by(individual) %>% 
+  callrate_IV() 
+
+```
+
+### MA transformation
+Logarithmic difference (M) and logarithmic average (A) give an overview of the quality of the signal and distribution of the 3 genotypes. Function calculate_ma_IV(.) performs transformation on both, raw intensities (x_raw,y_raw) and normalized intensities (x,y) and therefore generates 4 additional features to the original dataframe
+```{r ma}
+df %>% calculate_ma_IV() %>% head()
+#head(df)
+```  
+
+MA plots give an overview of potential channel imbalances and give basic information about the noisiness of the sample   
+
+```{r plotma}
+#df %>% set_threshold(clfcol='score',threshold=0.5) %>% plot_ma()
+ma_plot=df %>% plot_ma()
+ma_plot
+
+
+```
+
+### PCA
+The built-in function `plot_pca(.)` allows to perform PCA on one or multiple features (defined by parameter) accross all loci.
+
+```{r PCA}
+pca_plot = df %>% plot_pca(feat=c('gtype'))
+pca_plot
+```
+
+### Regenotyping on a pretrained SC classifier
+First load the Random Forest classifier
+```{r clfload}
+clf_rf= scload('CLASSIFIERS/clf_30trees_7228_ratio1_lightweight.clf')
+```
+And run the classification:
+```{r class}
+df %<>% predict_suretype(clf_rf)
+```
+The prediction adds few new columns with scoring using single layer classifiaction with Random Forest (RF, feature name rf_score) and cascade classification with RF and Gaussian Discriminant Analysis (GDA, feature name: rf-gda_score). The Gencall 'score' column is renamed to 'gencall_score' to keep consistent nomenclature.
+```{r class_view}
+df %>% filter(Chr==1) %>% head()
+```

@@ -1,10 +1,10 @@
 ---
-title: "SureTypeSCR -- Implementation of algorithm for regenotyping of single cell data."
+title: "Deprec:SureTypeSCR -- Implementation of algorithm for regenotyping of single cell data."
 author: "Ivan Vogel, Lishan Cai"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{SureTypeSCR overview}
+  %\VignetteIndexEntry{Deprec:SureTypeSCR overview}
   %\VignetteEncoding{UTF-8}
 output:
   BiocStyle::html_document:

@@ -1,0 +1,62 @@
+
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "SureTypeSCR"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> library('SureTypeSCR')
+Loading required package: reticulate
+Loading required package: knitr
+Loading required package: BiocStyle
+checking python library availability...
+done.
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("allele_freq")
+> ### * allele_freq
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: allele_freq
+> ### Title: The frequency function is to calculate the allele frequency over
+> ###   all the samples
+> ### Aliases: allele_freq
+> 
+> ### ** Examples
+> 
+> 
+> # parsing file from gtc raw files
+> 
+> gtc_path = system.file("files/GTCs",package='SureTypeSCR')
+> cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
+> manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
+> samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
+> 
+> df <- scbasic(manifest_path,cluster_path,samplesheet)
+Error in py_call_impl(callable, dots$args, dots$keywords) : 
+  NameError: 'Check the format of samplesheet. There should be 'Sample_ID' index' The template format is https://github.com/Meiomap/SureTypeSC_2/blob/master/Samplesheetr.csv '.
+
+Detailed traceback: 
+  File "C:\Users\gqc954\AppData\Roaming\Python\Python39\site-packages\suretypesc-0.2.0-py3.9.egg\SureTypeSC\genome_library.py", line 563, in basic
+    raise NameError( "'Check the format of samplesheet. There should be 'Sample_ID' index' The template format is https://github.com/Meiomap/SureTypeSC_2/blob/master/Samplesheetr.csv '.")
+Calls: scbasic -> <Anonymous> -> py_call_impl
+Execution halted

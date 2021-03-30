@@ -1,0 +1,167 @@
+* using log directory 'C:/Users/gqc954/package_testing_win/SureTypeSCR/..Rcheck'
+* using R version 4.0.3 (2020-10-10)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file './DESCRIPTION' ... OK
+* this is package 'SureTypeSCR' version '0.99.0'
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .RData
+  .Rhistory
+  .Rprofile
+  .gitignore
+  R/.Rhistory
+  man/.Rhistory
+  ..Rcheck
+  .git
+These were most likely included in error. See section 'Package
+structure' in the 'Writing R Extensions' manual.
+* checking for portable file names ... OK
+* checking whether package 'SureTypeSCR' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking 'build' directory ... WARNING
+Output(s) listed in 'build/vignette.rds' but not in package:
+  'inst/doc/SureTypeSCR.html'
+* checking DESCRIPTION meta-information ... NOTE
+Packages listed in more than one of Depends, Imports, Suggests, Enhances:
+  'reticulate' 'knitr' 'BiocStyle'
+A package should be listed in only one of these fields.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+Subdirectory 'inst' contains no files.
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... WARNING
+'::' or ':::' import not declared from: 'dplyr'
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+callrate_IV: no visible global function definition for 'group_vars'
+callrate_IV: no visible global function definition for '%>%'
+callrate_IV: no visible global function definition for 'tally'
+callrate_IV: no visible global function definition for 'ungroup'
+callrate_IV: no visible global function definition for 'group_by_at'
+callrate_IV: no visible global function definition for 'vars'
+callrate_IV: no visible global function definition for 'mutate'
+callrate_IV: no visible binding for global variable 'n'
+callrate_IV: no visible global function definition for 'summarize'
+callrate_IV: no visible binding for global variable 'gtype'
+callrate_IV: no visible global function definition for 'n'
+predict_suretype: no visible global function definition for '%>%'
+predict_suretype: no visible binding for global variable 'clf_rf'
+predict_suretype: no visible binding for global variable '.'
+predict_suretype: no visible global function definition for 'select'
+predict_suretype: no visible global function definition for 'rename'
+preprocess_pca: no visible global function definition for '%>%'
+preprocess_pca: no visible global function definition for 'mutate'
+preprocess_pca: no visible global function definition for 'case_when'
+preprocess_pca: no visible global function definition for 'filter'
+preprocess_pca: no visible global function definition for 'str_detect'
+preprocess_pca: no visible binding for global variable 'Name'
+preprocess_pca: no visible global function definition for 'select'
+preprocess_pca: no visible binding for global variable 'individual'
+preprocess_pca: no visible global function definition for
+  'pivot_longer'
+preprocess_pca: no visible global function definition for 'replace_na'
+preprocess_pca: no visible binding for global variable 'value'
+preprocess_pca: no visible global function definition for 'pivot_wider'
+preprocess_pca: no visible global function definition for 'group_by'
+preprocess_pca: no visible binding for global variable 'gtype'
+preprocess_pca: no visible binding for global variable 'Callrate'
+preprocess_pca: no visible global function definition for 'mutate_at'
+preprocess_pca: no visible global function definition for 'inner_join'
+preprocess_pca: no visible global function definition for
+  'column_to_rownames'
+scpredict_IV: no visible binding for global variable '.'
+set_threshold: no visible global function definition for '%>%'
+set_threshold: no visible global function definition for 'mutate'
+set_threshold: no visible global function definition for 'case_when'
+Undefined global functions or variables:
+  %>% . Callrate Name case_when clf_rf column_to_rownames filter
+  group_by group_by_at group_vars gtype individual inner_join mutate
+  mutate_at n pivot_longer pivot_wider rename replace_na select
+  str_detect summarize tally ungroup value vars
+Consider adding
+  importFrom("stats", "filter")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  'calculate_ma_IV' 'callrate_IV' 'create_dataobject_from_frame'
+  'get_multiind_df' 'get_simpleind_df' 'predict_suretype'
+  'preprocess_pca' 'scbasic_IV' 'scpredict_IV' 'set_threshold'
+All user-level objects in a package should have documentation entries.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking installed files from 'inst/doc' ... OK
+* checking files in 'vignettes' ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  'SureTypeSCR.R', 'SureTypeSCR.Rmd'
+* checking examples ... ERROR
+Running examples in 'SureTypeSCR-Ex.R' failed
+The error most likely occurred in:
+
+> ### Name: allele_freq
+> ### Title: The frequency function is to calculate the allele frequency over
+> ###   all the samples
+> ### Aliases: allele_freq
+> 
+> ### ** Examples
+> 
+> 
+> # parsing file from gtc raw files
+> 
+> gtc_path = system.file("files/GTCs",package='SureTypeSCR')
+> cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
+> manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
+> samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
+> 
+> df <- scbasic(manifest_path,cluster_path,samplesheet)
+Error in py_call_impl(callable, dots$args, dots$keywords) : 
+  NameError: 'Check the format of samplesheet. There should be 'Sample_ID' index' The template format is https://github.com/Meiomap/SureTypeSC_2/blob/master/Samplesheetr.csv '.
+
+Detailed traceback: 
+  File "C:\Users\gqc954\AppData\Roaming\Python\Python39\site-packages\suretypesc-0.2.0-py3.9.egg\SureTypeSC\genome_library.py", line 563, in basic
+    raise NameError( "'Check the format of samplesheet. There should be 'Sample_ID' index' The template format is https://github.com/Meiomap/SureTypeSC_2/blob/master/Samplesheetr.csv '.")
+Calls: scbasic -> <Anonymous> -> py_call_impl
+Execution halted
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in 'inst/doc' ... WARNING
+Failed to locate 'weave' output file 'SureTypeSCR.pdf' or 'SureTypeSCR.html' for vignette with name 'SureTypeSCR' and engine 'knitr::rmarkdown'. The following files exist in working directory 'C:\Users\gqc954\package_testing_win\SureTypeSCR\inst\doc': 
+Package vignette without corresponding single PDF/HTML:
+   'SureTypeSCR.Rmd'
+
+* checking running R code from vignettes ... NONE
+  'SureTypeSCR.Rmd' using 'UTF-8'... OK
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+* checking PDF version of manual without hyperrefs or index ... ERROR
+Re-running with no redirection of stdout/stderr.
+* DONE
+Status: 2 ERRORs, 7 WARNINGs, 3 NOTEs
