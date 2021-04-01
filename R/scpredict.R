@@ -1,4 +1,4 @@
-scpredict_IV = function(.data,clf,clftype='rf') {
+scpredict = function(.data,clf,clftype='rf') {
  #test_obj=create_data_object(test)
  if (dplyr::is_grouped_df(.data)) {
       return(dplyr::do(.data, scpredict_IV(.,clf,clftype)))

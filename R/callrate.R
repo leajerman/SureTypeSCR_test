@@ -1,4 +1,4 @@
-callrate_IV <- function(.data)
+callrate <- function(.data)
 {
   if ((dplyr::is_grouped_df(.data) & ('gtype' %in% group_vars(.data)))) {
     grouping_vars=group_vars(.data)
