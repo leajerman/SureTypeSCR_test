@@ -2,4 +2,5 @@
 .R
 .RData
 R/.Rhistory
-*.tar.gz
+*.tar.gz   
+inst/files/* 

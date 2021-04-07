@@ -1,31 +1,77 @@
-plot_pca <- function(.data,feat,n='all',by='Chr')
+anfun <- function(.x)
 {
-  if (n!='all')
+  if (nrow(.x)>0)
+    return(prcomp(.x))
+  else
+    return(NULL)
+}
+
+
+plot_pca <- function(.data,by_chrom=TRUE,features=c('x','y'),labels=TRUE)
+{
+  pallette=colorRampPalette(brewer.pal(8, "Set2"))(length(unique(.data$individual)))
+  if (by_chrom==TRUE)
   {
-    pca=.data %>% 
-      group_by(Chr) %>% 
-      preprocess_pca(features=feat) %>% 
-      select(one_of(sample(names(.),n))) %>% 
-      prcomp()
+  p=.data %>%
+    as_tibble() %>%
+    group_by(Chr) %>% 
+    nest() %>%
+    mutate(pca_preproc = map(data, ~ preprocess_pca(.x,.y,feat=features)),
+           pca = map(pca_preproc,~ anfun(.x)),
+           imp_pc1=map(pca,~summary(.x)$importance['Proportion of Variance','PC1'] ),
+           imp_pc2=map(pca,~summary(.x)$importance['Proportion of Variance','PC2'] ),
+           pca_df=map(pca,~{as.data.frame(.x$x)}),
+           pca_df=map(pca_df,~mutate(.x,individual=rownames(.x)))) %>%
+    select(Chr,imp_pc1,imp_pc2,pca_df) %>%
+    unnest(c(pca_df,imp_pc1,imp_pc2))  %>%
+    mutate(imp_pc1=round(imp_pc1,2),
+           imp_pc2=round(imp_pc2,2))
+
+  
+  labels_df=p %>% select(Chr,imp_pc1,imp_pc2) %>% mutate(label=str_c('PC1:',imp_pc1,'PC2: ', imp_pc2,sep=' '))  %>% distinct() %>% select(Chr,label)  
+  
+  plot=ggplot(data=p)  + 
+    geom_jitter(aes(x=PC1,y=PC2,shape=factor(individual),color=factor(individual))) + 
+    facet_wrap(~Chr,scales = 'free') + 
+    theme_bw() +  
+    scale_color_manual(values=pallette) + 
+    scale_shape_manual(values = 0:(length(unique(.data$individual))-1)) + 
+    labs(color = "Individual") 
+  
+  if(labels==TRUE)
+  {
+    plot=plot+geom_text(data=labels_df,mapping = aes(x = -Inf, y = -Inf, label = label), hjust   = -0.1,vjust   = -1)
+  }
   }
   else
   {
-    pca=.data %>% 
-      group_by(Chr) %>% 
-      group_modify(~ preprocess_pca(.x,.y, feat)) %>%
-      #preprocess_pca(features=feat) %>% 
-      prcomp()
+    p=.data %>%
+    as_tibble() %>%
+      nest(data=everything()) %>%
+      mutate(pca_preproc = map(data, ~ preprocess_pca(.x,.y,feat=features)),
+             pca = map(pca_preproc,~ anfun(.x)),
+             imp_pc1=map(pca,~summary(.x)$importance['Proportion of Variance','PC1'] ),
+             imp_pc2=map(pca,~summary(.x)$importance['Proportion of Variance','PC2'] ),
+             pca_df=map(pca,~{as.data.frame(.x$x)}),
+             pca_df=map(pca_df,~mutate(.x,individual=rownames(.x)))) %>%
+      select(pca_df,imp_pc1,imp_pc2) %>%
+      unnest(c(pca_df,imp_pc1,imp_pc2))  %>%
+      mutate(imp_pc1=round(imp_pc1,2),
+             imp_pc2=round(imp_pc2,2))
+    
+    labels_df=p %>% select(imp_pc1,imp_pc2) %>% mutate(label=str_c('PC1:',imp_pc1,'PC2: ', imp_pc2,sep=' '))  %>% distinct() %>% select(label)  
+    
+    plot=ggplot(data=p)  + 
+      geom_jitter(aes(x=PC1,y=PC2,shape=factor(individual),color=factor(individual))) + 
+                    theme_bw() +  
+      scale_color_manual(values=pallette) + 
+      scale_shape_manual(values = 0:(length(unique(.data$individual))-1)) + 
+      labs(color='Individual') 
+    
+    if(labels==TRUE)
+    {
+     plot=plot+geom_text(data=labels_df,mapping = aes(x = -Inf, y = -Inf, label = label), hjust   = -0.1,vjust   = -1)
+    }
   }
-  
-  sum=summary(pca)
-  importance_pc1=sum$importance['Proportion of Variance','PC1']
-  importance_pc2=sum$importance['Proportion of Variance','PC2']
-  
-  pca_df=as.data.frame(pca$x)
-  pca_df$individual=rownames(pca_df)
-  
-  
-  p=ggplot(data=pca_df) + geom_point(aes(x=PC1,y=PC2)) + theme_bw() + xlab(paste0("PC1 [",as.character(importance_pc1*100)," %]")) + ylab(paste0("PC2 [", as.character(importance_pc2*100)," %]")) + geom_label_repel(aes(x=PC1,y=PC2,label=individual))
-  return(p)
-  
+  return(plot)
 }

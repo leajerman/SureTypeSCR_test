@@ -1,6 +1,6 @@
 \name{scload}
 \alias{scload}
-\title{Load Random Forest classifier or Gaussian Discrinimate Analysis}
+\title{Load classifier}
 \usage{
 scload(filename)
 }
@@ -13,22 +13,25 @@ instance of a classifier
 }
 
 \description{
-Load Random Forest classifier or Gaussian Discrinimate Analysis
+Load pretrained classifier
 }
 %\description{
 %
 %}
 \examples{
 
-clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
-clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
 
-# The Random Forest classifier
-clf_rf <- scload(clf_rf_path) 
-
-# The Gaussian Discriminate Analysis classifier
-clf_gda <- scload(clf_gda_path) 
+#gtc_path=system.file('files/GTCs',package='SureTypeSCR')
+samplesheet=system.file('files/GSE19247_embryos.csv',package='SureTypeSCR')
+manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
+cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
+clf=system.file('files/rf.clf',package='SureTypeSCR')
 
 
+#Load data
+df=scbasic(manifest,cluster,samplesheet)
+
+rf=scload(clf)
+df %>% calculate_ma() %>% predict_suretype(rf)
 
 }

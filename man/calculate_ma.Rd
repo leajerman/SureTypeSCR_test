@@ -1,36 +1,38 @@
 \name{calculate_ma}
 \alias{calculate_ma}
-\title{To calculate m and a features}
+\title{Calculated M (logarithmic difference) and A (logarithmic average) of itensity signals}
 \usage{
-calculate_ma(df)
+calculate_ma(.data)
 }
 \arguments{
-\item{df}{the Data object from create_from_frame function}
+\item{df}{data frame from \code{scbasic()} or compatible}
 }
 \value{
-Data object with adding m and a features
+\code{.data} with extra columns representing the results of MA transformation (m, a, m_raw and a_raw)
 }
 
 \description{
-To calculate m and a features
+Logartihmic transformation is a preliminary step for classification using SureTypeSC 
 }
-%\description{
-%
-%}
 \examples{
 
 # parsing file from gtc raw files
 
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
+setwd(system.file(package='SureTypeSCR'))
 
-df <- scbasic(manifest_path,cluster_path,samplesheet)
 
-df <- create_from_frame(df)
+gtc_path=system.file('files/GTCs',package='SureTypeSCR')
+samplesheet=system.file('files/GSE19247_embryos.csv',package='SureTypeSCR')
+manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
+cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
+clf=system.file('files/rf.clf',package='SureTypeSCR')
 
-dfs <- calculate_ma(df)
+
+#Load data
+df=scbasic(manifest,cluster,samplesheet)
+
+#calculate MA transform and store in the original dataframe using margittr %<>% operator
+df %<>% calculate_ma()
 
 
 

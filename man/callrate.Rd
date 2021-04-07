@@ -1,19 +1,18 @@
 \name{callrate}
 \alias{callrate}
-\title{The callrate function is to calculate the allele frequency over all the samples}
+\title{Calculates callrate as proportion of called SNPs in the input dataframe}
 \usage{
-callrate(df,th=0)
+callrate(.data)
 }
 \arguments{
-\item{df}{the pandas dataframe from GenomeStudio or scbasic function}
-\item{th}{the threshold}
+\item{.data}{data frame from \code{scbasic} or compatible}
 }
 \value{
 The callrate values of all samples
 }
 
 \description{
-The callrate function is to calculate the allele frequency over all the samples
+Calculates callrate as proportion of called SNPs in the input dataframe
 }
 %\description{
 %
@@ -22,17 +21,26 @@ The callrate function is to calculate the allele frequency over all the samples
 
 # parsing file from gtc raw files
 
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
+
+setwd(system.file(package='SureTypeSCR'))
+
+samplesheet=system.file('files/GSE19247_embryos.csv',package='SureTypeSCR')
+manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
+cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
+
+
+#Load data
+df=scbasic(manifest,cluster,samplesheet)
 
 df <- scbasic(manifest_path,cluster_path,samplesheet)
 
-# The Random Forest classifier
-call <- callrate(df,th=0.2) 
+#Get overall callrate
+df %>% callrate() 
 
+#Get callrate per individual
+df %>% group_by(individual) %>% callrate()
 
+#Get callrate as allelic fractions and pivot to columns
 
-
+df %>% group_by(individual,gtype) %>% callrate() %>% pivot_wider(names_from=gtype,values_from=Callrate)
 }

@@ -1,4 +1,4 @@
-plot_ma <- function(.data,norm=FALSE,smooth=TRUE,nocalls=FALSE,n=1)
+plot_ma <- function(.data,norm=TRUE,smooth=FALSE,nocalls=FALSE,n=1)
 {
 	  if (n>1 | n<0)
 		    {
@@ -17,7 +17,7 @@ plot_ma <- function(.data,norm=FALSE,smooth=TRUE,nocalls=FALSE,n=1)
     i=intersect(colnames(.data),c('m_raw','a_raw','m','a'))
       if (length(i)==0)
 	        {
-			    .d=.d %>% calculate_ma_IV_v2()
+			    .d=.d %>% calculate_ma()
       }
       
       
