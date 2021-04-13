@@ -35,6 +35,6 @@ cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 #Load data
 df=scbasic(manifest,cluster,samplesheet)
 
-# The Random Forest classifier
+#create ggplot object with PCA
 df %>% plot_pca(by_chrom=TRUE,features=c('x','y'),labels=TRUE)
 }
