@@ -90,6 +90,6 @@ df = scbasic_IV(samplesheet='Samplesheetr.csv',
                 egt='HumanKaryomap-12v1_A.egt')
 ```
 
-The dataframe ```df``` should be now populated with genotype features from 2 samples.
+The dataframe ```df``` should be now populated with genotype features from 2 samples. A comprehensive tutorial with real dataset is part of documentation.
 
 
