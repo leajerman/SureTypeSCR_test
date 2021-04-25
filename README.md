@@ -1,4 +1,4 @@
-# SureTypeSCR_Testing
+# SureTypeSCR
 
 ## Introduction
 
