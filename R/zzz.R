@@ -1,8 +1,9 @@
 .onAttach <- function(libname, pkgname) {
   # delay load foo module (will only be loaded when accessed via $)
   packageStartupMessage("checking python library availability...")
+  
   #path where package is installed
-  pkgpathfiles=system.file(package='SureTypeSCR')
+  pkgpathfiles=system.file(file='files',package='SureTypeSCR')
   clfpath=system.file(file='files/rf.clf',package='SureTypeSCR')
   if (clfpath=='')
   {
