@@ -11,9 +11,7 @@
      if (zclfpath=='')
      {
         stop("Pretrained classifier not found in the package directory")
-     }
-     else
-     {
+     } else {
         unzip(zclfpath,exdir=pkgpathfiles)
      }
   }
@@ -25,15 +23,10 @@
   #  'for more details: https://rstudio.github.io/reticulate/articles/versions.html#configuration-info-1')
     
   
-  if (virtualenv_exists('r-reticulate'))
-  {
-    use_virtualenv('r-reticulate')
-  }
-  else 
-  {
-    virtualenv_create('r-reticulate')
-  }  
-      
+  
+  if(virtualenv_exists('r-reticulate')) {
+  use_virtualenv('r-reticulate')
+  } else virtualenv_create('r-reticulate')
   chk <- try(import("IlluminaBeadArrayFiles"))
   if (inherits(chk, "try-error"))
   {
