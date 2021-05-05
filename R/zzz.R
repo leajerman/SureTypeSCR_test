@@ -25,7 +25,7 @@
   
   
   if(virtualenv_exists('r-reticulate')) {
-  use_virtualenv('r-reticulate')
+  use_virtualenv('r-reticulate',required=TRUE)
   } else { 
   virtualenv_create('r-reticulate')
   use_virtualenv('r-reticulate',required=TRUE)
