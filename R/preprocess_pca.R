@@ -50,7 +50,7 @@ preprocess_pca  <- function(.data,.group,features=c('x','y'))
     suppl=
       .data %>%
       group_by(individual,gtype) %>% 
-      callrate_IV() %>% 
+      callrate() %>% 
       pivot_wider(names_from=gtype,values_from=Callrate) %>% 
       mutate_at(c('AA','BB','AB','NC'),~replace_na(.,0))
     if (!is.null(output))

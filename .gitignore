@@ -3,4 +3,5 @@
 .RData
 R/.Rhistory
 *.tar.gz   
-inst/files/* 
+inst/files/GTCs
+inst/files/GSE19247_embryos.csv
