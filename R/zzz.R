@@ -1,7 +1,22 @@
 .onAttach <- function(libname, pkgname) {
   # delay load foo module (will only be loaded when accessed via $)
   packageStartupMessage("checking python library availability...")
-  print(system.file(package='SureTypeSCR'))
+  #path where package is installed
+  pkgpathfiles=system.file(package='SureTypeSCR')
+  clfpath=system.file(file='files/rf.clf',package='SureTypeSCR')
+  if (clfpath=='')
+  {
+     zclfpath=system.file(file='files/rf.zip',package='SureTypeSCR')
+     if (zclfpath=='')
+     {
+        stop("Pretrained classifier not found in the package directory")
+     }
+     else
+     {
+        unzip(zclfpath,exdir=pkgpathfiles)
+     }
+  }
+  
   chk <- as.numeric(py_config()['version'])
   if (chk < 3) stop('The python environment 2. is not compatible, please use python3 environment.' ,'\n','\n',
     'The possible python versions in local computer:','\n',py_config()['python_versions'], '\n','\n',
