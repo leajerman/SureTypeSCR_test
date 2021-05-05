@@ -28,7 +28,7 @@
   use_virtualenv('r-reticulate')
   } else { 
   virtualenv_create('r-reticulate')
-  use_virtualenv('r-reticulate')
+  use_virtualenv('r-reticulate',required=TRUE)
   }
   chk <- try(import("IlluminaBeadArrayFiles"))
   if (inherits(chk, "try-error"))
