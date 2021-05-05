@@ -24,6 +24,16 @@
   #  'you can specify certain python environment by using','\n', 'use_python("yourpath/python")','\n','\n',
   #  'for more details: https://rstudio.github.io/reticulate/articles/versions.html#configuration-info-1')
     
+  
+  if (virtualenv_exists('r-reticulate'))
+  {
+    use_virtualenv('r-reticulate')
+  }
+  else 
+  {
+    virtualenv_create('r-reticulate')
+  }  
+      
   chk <- try(import("IlluminaBeadArrayFiles"))
   if (inherits(chk, "try-error"))
   {
