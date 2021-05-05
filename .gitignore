@@ -5,3 +5,4 @@ R/.Rhistory
 *.tar.gz   
 inst/files/GTCs
 inst/files/GSE19247_embryos.csv
+inst/files/tmp
