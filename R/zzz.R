@@ -1,7 +1,7 @@
 .onAttach <- function(libname, pkgname) {
   # delay load foo module (will only be loaded when accessed via $)
   packageStartupMessage("checking python library availability...")
-  print(system(package='SureTypeSCR'))
+  print(system.file(package='SureTypeSCR'))
   chk <- as.numeric(py_config()['version'])
   if (chk < 3) stop('The python environment 2. is not compatible, please use python3 environment.' ,'\n','\n',
     'The possible python versions in local computer:','\n',py_config()['python_versions'], '\n','\n',
