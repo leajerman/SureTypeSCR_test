@@ -26,7 +26,10 @@
   
   if(virtualenv_exists('r-reticulate')) {
   use_virtualenv('r-reticulate')
-  } else virtualenv_create('r-reticulate')
+  } else { 
+  virtualenv_create('r-reticulate')
+  use_virtualenv('r-reticulate')
+  }
   chk <- try(import("IlluminaBeadArrayFiles"))
   if (inherits(chk, "try-error"))
   {
@@ -42,10 +45,11 @@
     #stop("SureTypeSC not found in python environment")
   }
   chk <- try(import("numpy"))
-  if (inherits(chk, "try-error")) stop("numpy not found in python environment")
+  if (inherits(chk, "try-error")) 
   {
     print('Installing supporting python package: numpy')
     virtualenv_install("r-reticulate", "numpy")
+    #stop("numpy not found in python environment")
   }
   chk <- try(import("pandas"))
   if (inherits(chk, "try-error"))
