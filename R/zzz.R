@@ -37,13 +37,6 @@
     virtualenv_install("r-reticulate", "git+https://github.com/Illumina/BeadArrayFiles.git")
     #stop("IlluminaBeadArrayFiles not found in python environment")
   }    
-  chk <- try(import("SureTypeSC"))
-  if (inherits(chk, "try-error")) 
-  {
-    print('Installing supporting python package: SureTypeSC')
-    virtualenv_install("r-reticulate", "SureTypeSC")
-    #stop("SureTypeSC not found in python environment")
-  }
   chk <- try(import("numpy"))
   if (inherits(chk, "try-error")) 
   {
@@ -64,6 +57,13 @@
     print('Installing supporting python package: sklearn')
     virtualenv_install("r-reticulate", "sklearn") 
     #stop("sklearn not found in python environment")
+  }
+  chk <- try(import("SureTypeSC"))
+  if (inherits(chk, "try-error")) 
+  {
+    print('Installing supporting python package: SureTypeSC')
+    virtualenv_install("r-reticulate", "SureTypeSC")
+    #stop("SureTypeSC not found in python environment")
   }
   #chk <- try(import("IlluminaBeadArrayFiles"))
   #if (inherits(chk, "try-error")) stop("IlluminaBeadArrayFiles not found in python environment")
