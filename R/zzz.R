@@ -30,35 +30,35 @@
   virtualenv_create('r-reticulate')
   use_virtualenv('r-reticulate',required=TRUE)
   }
-  chk <- try(import("IlluminaBeadArrayFiles"))
+  chk <- try(import("IlluminaBeadArrayFiles"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
     print('Installing supporting python package: IlluminaBeadArrayFiles')
     virtualenv_install("r-reticulate", "git+https://github.com/Illumina/BeadArrayFiles.git")
     #stop("IlluminaBeadArrayFiles not found in python environment")
   }    
-  chk <- try(import("numpy"))
+  chk <- try(import("numpy"),silent=TRUE)
   if (inherits(chk, "try-error")) 
   {
     print('Installing supporting python package: numpy')
     virtualenv_install("r-reticulate", "numpy")
     #stop("numpy not found in python environment")
   }
-  chk <- try(import("pandas"))
+  chk <- try(import("pandas"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
     print('Installing supporting python package: pandas')
     virtualenv_install("r-reticulate", "pandas")
     #stop("pandas not found in python environment")
   } 
-  chk <- try(import("sklearn"))
+  chk <- try(import("sklearn"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
     print('Installing supporting python package: sklearn')
     virtualenv_install("r-reticulate", "sklearn") 
     #stop("sklearn not found in python environment")
   }
-  chk <- try(import("SureTypeSC"))
+  chk <- try(import("SureTypeSC"),silent=TRUE)
   if (inherits(chk, "try-error")) 
   {
     print('Installing supporting python package: SureTypeSC')
