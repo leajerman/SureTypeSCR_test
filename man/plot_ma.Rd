@@ -6,17 +6,17 @@ plot_ma(.data,norm=TRUE,smooth=FALSE,nocalls=FALSE,n=1)
 }
 \arguments{
 \item{.data}{data frame returned by scbasic or compatible function}
-\item{norm}{flag indicating whether to use normalized (\code{TRUE}) or raw (\code{FALSE}) intensities}
-\item{smooth}{flag indicating whether to apply smoothing spline per genotype cluster(AA/BB/AB)}
-\item{nocalls}{flag indicating whether to include nocalls in plotting}
-\item{n}{fraction of data to use from \code{.data}}
+\item{norm}{boolean flag indicating whether to use normalized (\code{TRUE}) or raw (\code{FALSE}) intensities}
+\item{smooth}{boolean flag indicating whether to apply smoothing spline per genotype cluster(AA/BB/AB), \code{TRUE}) or (\code{FALSE}}
+\item{nocalls}{boolean flag indicating whether to include nocalls in plotting (\code{TRUE}) or (\code{FALSE})}
+\item{n}{fraction of data to use from \code{.data} (real number in range 0..1)}
 }
 \value{
 ggplot object with MA plots facetted by individual 
 }
 
 \description{
-Plot dotplot of logarithmic difference (M) and logarithmic average (A) of itensity signals
+Plot dotplot of logarithmic difference (M) and logarithmic average (A) of intensity signals
 }
 %\description{
 %
@@ -26,7 +26,7 @@ Plot dotplot of logarithmic difference (M) and logarithmic average (A) of itensi
 # parsing file from gtc raw files
 setwd(system.file(package='SureTypeSCR'))
 
-samplesheet=system.file('files/GSE19247_embryos.csv',package='SureTypeSCR')
+samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
 manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
 cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 clf=system.file('files/rf.clf',package='SureTypeSCR')
