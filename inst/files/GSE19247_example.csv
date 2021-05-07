@@ -1,0 +1,11 @@
+[Header],,,,
+INVESTIGATOR NAME,Ivan Vogel,,,
+PROJECT NAME,Test1,,,
+EXPERIMENT NAME,SingleCellExample,,,
+DATE,19/10/2016 00:00,,,
+[Manifests],,,,
+A,HumanCytoSNP-12v2,,,
+[Data],,,,
+Sample_ID,SentrixBarcode_A,SentrixPosition_A,Path,Aux
+GSM477561,4299791135,R01C01,files/GTCs,0
+GSM477563,4299791135,R01C02,files/GTCs,0

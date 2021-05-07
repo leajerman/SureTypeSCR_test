@@ -11,8 +11,8 @@ License: Artistic-2.0
 Imports:
 	reticulate,
 	knitr,
-    magrittr,
-    tidyverse,
+	magrittr,
+	tidyverse,
 	BiocStyle
 biocViews: Software, GenotypingArray,SingleCell
 VignetteBuilder: knitr
