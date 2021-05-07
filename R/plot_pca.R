@@ -38,7 +38,7 @@ plot_pca <- function(.data,by_chrom=TRUE,features=c('x','y'),labels=TRUE,metadat
     plot=ggplot(data=p,aes(x=PC1,y=PC2,color=factor(familyid),label=individual))  + 
       geom_jitter() + 
       facet_wrap(~Chr,scales = 'free') + 
-      theme_bw() +  
+      theme_bw()  
       #scale_color_manual(values=pallette) + 
       #scale_shape_manual(values = 0:(length(unique(.data$individual))-1)) + 
       #labs(color = "Individual") 
@@ -73,7 +73,7 @@ plot_pca <- function(.data,by_chrom=TRUE,features=c('x','y'),labels=TRUE,metadat
     
     plot=ggplot(data=p,aes(x=PC1,y=PC2,color=factor(familyid),label=individual))  + 
       geom_jitter() + 
-      theme_bw() +  
+      theme_bw()   
       #scale_color_manual(values=pallette) + 
       #scale_shape_manual(values = 0:(length(unique(.data$individual))-1)) + 
       #labs(color='Individual') 

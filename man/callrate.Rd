@@ -24,7 +24,7 @@ Calculates callrate as proportion of called SNPs in the input dataframe
 
 setwd(system.file(package='SureTypeSCR'))
 
-samplesheet=system.file('files/GSE19247_embryos.csv',package='SureTypeSCR')
+samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
 manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
 cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 
@@ -32,7 +32,6 @@ cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 #Load data
 df=scbasic(manifest,cluster,samplesheet)
 
-df <- scbasic(manifest_path,cluster_path,samplesheet)
 
 #Get overall callrate
 df %>% callrate() 
@@ -41,6 +40,5 @@ df %>% callrate()
 df %>% group_by(individual) %>% callrate()
 
 #Get callrate as allelic fractions and pivot to columns
-
 df %>% group_by(individual,gtype) %>% callrate() %>% pivot_wider(names_from=gtype,values_from=Callrate)
 }
