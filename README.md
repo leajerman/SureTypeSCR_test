@@ -6,9 +6,10 @@ SureTypeSCR is an R package for QC and rapid genotyping of single cell SNP array
 
 ## Prerequisites
 Provided installation scripts will install most of the dependencies automatically, however following is needed prior to the installation:
-* R (>=4.0) 
+* R (>=4.0). We recommend installation of the latest version (v 4.0.5) 
 * Python 3 (>= 3.6)
 
+TIP:  
 ## Installation
 
 As SureTypeSCR is using both Python libraries (via reticulate) and R. A preferred way is to first create a virtual python environment, install all necessarry python libraries and then install the R package. Provided installation scripts per platform (see below) will take you through this process.
