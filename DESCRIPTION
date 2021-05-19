@@ -4,8 +4,9 @@ Description: SureTypeSCR is R package for QC of (single cell) SNP arrays and sin
 Version: 0.99.0
 Author: Ivan Vogel, Lishan Cai
 Suggests: testthat,
-	rmarkdown
-Depends: R (>= 3.5.0), reticulate, knitr, BiocStyle
+	rmarkdown,
+    ggrepel
+Depends: R (>= 3.5.0), reticulate, tidyverse, magrittr, knitr, BiocStyle
 Maintainer: Ivan Vogel <ivogel@sund.ku.dk>
 License: Artistic-2.0
 Imports:

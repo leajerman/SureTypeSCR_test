@@ -7,8 +7,10 @@ plot_pca(.data,by_chrom,features,labels)
 \arguments{
 \item{.data}{dataframe from scbasic or compatible}
 \item{by_chrom}{boolean flag  indicating whether to run PCA by chromosome (TRUE or FALSE)}
-\item{features}{vector of features types to use for PCA, i.e. c('x','y')}
-\item{labels}{flag indicating whether to show dimension importance for 2D PCA (TRUE or FALSE)}
+\item{features}{vector of features types to use for PCA alias columns from  \code{.data} , i.e. c('x','y')}
+\item{importances}{boolean flag indicating whether to render dimension importances (TRUE or FALSE)}
+\item{metadata}{data frame with metadata - currently grouping by family is supported, meaning \code{metadata} contains \code{familyid} and \code{individual} columns and \code{metadata} will be merged to internal data frame by matching \code{individual}}                                                                                            
+\item{labels}{boolean flag indicating whether to render sample names  using \code{ggrepel} to prevent overplotting  (TRUE or FALSE)}
 }
 \value{
 ggplot object with PCA plot
