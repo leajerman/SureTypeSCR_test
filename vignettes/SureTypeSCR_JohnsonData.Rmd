@@ -27,12 +27,12 @@ This tutorial gives basic introduction to the data analysis with SureTypeSCR. Th
 Both, SureTypeSCR and johnsonspermdata are installed from github repository using devtools. The dependencies should be installed automatically.
 
 ```{r install,echo=TRUE,results="show",include=TRUE,cache=FALSE}
-require(nothing, quietly = TRUE)
+#require(nothing, quietly = TRUE)
 
-library(devtools)
+#library(devtools)
 
 ##install  SureTypeSCR  from  github
-devtools::install_github("Meiomap/SureTypeSCR")
+#devtools::install_github("Meiomap/SureTypeSCR")
 
 ##install  data  package  with  sperm  data (compiled  from  GSE19247)
 #devtools::install_github("Meiomap/johnsonspermdata")
@@ -40,11 +40,12 @@ devtools::install_github("Meiomap/SureTypeSCR")
 
 When loaded for the first time, SureTypeSCR will create a python virtual environment and install all required python libraries via python package installer (pip).
 
-```{r init, echo=TRUE, warning=FALSE, results='hide'}
+```{r init, echo=FALSE, warning=FALSE, results='hide'}
 library(SureTypeSCR)
 library(tidyverse)
 library(johnsonspermdata)
 library(magrittr)
+library(ggrepel)
 # load  metadata  and  samplesheet  location
 data(metadata ,samplesheet)
 ```
@@ -91,50 +92,33 @@ df %>%
   plot_pca(features="gtype", metadata=metadata ,by_chrom=FALSE)
 ```
 
-<!-- Make sure to replace the path in `Sys.setenv` to your python interpreter path (command `which python` on Linux/Mac or `where python` on Windows will give you the path) -->
+Now we perform MA transformation and visualise:
 
-<!-- ```{r dsetup,echo=TRUE,results="show",include=FALSE} -->
+```{r  MAtransform,echo=TRUE,results="show",include=TRUE}
+df %>%
+  calculate_ma() %>%
+  plot_ma(n=0.1)
 
-<!-- Sys.setenv(RETICULATE_PYTHON='C:\\Users\\gqc954\\AppData\\Local\\Programs\\Python\\Python39') -->
+```
 
-<!-- library(SureTypeSCR) -->
+The classification of the single cell genotypes is now performed via pretrained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data. The classification is performed per sample basis.
 
-<!-- library(BiocStyle) -->
+```{r classification,echo=TRUE,results="show",include=TRUE}
+clf=system.file("files/rf.clf",package="SureTypeSCR")
+df_model = df %>%
+  calculate_ma() %>%
+  group_by(individual) %>%
+  nest() %>%
+  mutate(model=map(data , function(df) suretype_model(df,individual , clf)))
+```
 
-<!-- library(googledrive) -->
+Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm.
 
-<!-- library(tidyverse) -->
+```{r After_classification,echo=TRUE,results="show",include=TRUE}
+df_model_unnested = df_model %>%
+  unnest(c(data ,model))
 
-<!-- library(magrittr) -->
-
-<!-- ``` -->
-
-<!-- ## Loading -->
-
-<!-- ## Downloading testing data and classifiers -->
-
-<!-- ```{r doimpe,results="hide",message=FALSE} -->
-
-<!-- #download classifier CLASSIFIERS.zip -->
-
-<!-- #drive_download(as_id('1wBPSMQiuY50Zct9Re2LkqaQgHwuu0k6k'),overwrite=TRUE) -->
-
-<!-- #download testing data TESTING_DATA_2SAMPLES.zip -->
-
-<!-- drive_download(as_id('1SUDvgEyynXuAmgECHVrzx6pPoJ5PnNy1'),overwrite=TRUE) -->
-
-<!-- #unzip('CLASSIFIERS.zip') -->
-
-<!-- unzip('TESTING_DATA_2SAMPLES.zip',exdir='inst/files') -->
-
-<!-- #gtc_path = 'TESTING_DATA_2SAMPLES/GTCs' -->
-
-<!-- #cluster_path = 'TESTING_DATA_2SAMPLES/HumanKaryomap-12v1_A.egt' -->
-
-<!-- #manifest_path = 'TESTING_DATA_2SAMPLES/HumanKaryomap-12v1_A.bpm' -->
-
-<!-- #samplesheet_path = 'TESTING_DATA_2SAMPLES/Samplesheetr.csv' -->
-
-<!-- #clf_rf_path = 'CLASSIFIERS/clf_30trees_7228_ratio1_lightweight.clf' -->
-
-<!-- ``` -->
+df_model_unnested %>%
+  set_threshold(rfgda_score,threshold =0.5) %>%
+  plot_ma()
+```
