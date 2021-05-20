@@ -1,4 +1,4 @@
-suretype_model <- function(.data,.individual,.sclist,rf_clf)
+suretype_model <- function(.data,.individual,.sclist='all',rf_clf)
 {
   print(.individual)
   #print(.sclist)
@@ -16,7 +16,7 @@ suretype_model <- function(.data,.individual,.sclist,rf_clf)
   else
   {
     .data %>% 
-      mutate('rfgda.score'=1,'rf_score'=1) %>%
-      select('rfgda.score','rf_score')  
+      mutate('rfgda.score'=1,'rf.score'=1) %>%
+      select('rfgda.score','rf.score')  
   }
 }

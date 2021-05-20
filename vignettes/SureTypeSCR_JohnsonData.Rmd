@@ -110,6 +110,7 @@ df_model = df %>%
   group_by(individual) %>%
   nest() %>%
   mutate(model=map(data , function(df) suretype_model(df,individual , clf)))
+head(df_model)
 ```
 
 Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm.
@@ -117,8 +118,8 @@ Now we visualise the MA plot again - this time for the filtered data to explore 
 ```{r After_classification,echo=TRUE,results="show",include=TRUE}
 df_model_unnested = df_model %>%
   unnest(c(data ,model))
-
+head(df_model_unnested)
 df_model_unnested %>%
-  set_threshold(rfgda_score,threshold =0.5) %>%
-  plot_ma()
+  set_threshold('rfgda_score',threshold =0.5) %>%
+  plot_ma(n=0.1)
 ```
