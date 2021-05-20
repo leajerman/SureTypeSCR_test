@@ -3,7 +3,7 @@ suretype_model <- function(.data,.individual,rf_clf, .sclist='all')
   #print(.individual)
   #print(.sclist)
   #print(.data)
-  if (.sclist=='all' | .individual %in% .sclist)
+  if (is.null(.sclist) | .individual %in% .sclist)
   {
     write(paste("Processing sample",.individual,sep=' '), stdout())
     .data %>% mutate(individual=.individual) %>%

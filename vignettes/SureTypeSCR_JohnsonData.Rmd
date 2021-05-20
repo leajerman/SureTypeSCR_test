@@ -92,12 +92,12 @@ df %>%
   plot_pca(features="gtype", metadata=metadata ,by_chrom=FALSE)
 ```
 
-Now we perform MA transformation and visualise:
+Now we perform MA transformation. MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous B and M\>0 corresponds to homozygous A.
 
 ```{r  MAtransform,echo=TRUE,results="show",include=TRUE}
 df %>%
   calculate_ma() %>%
-  plot_ma(n=0.1)
+  plot_ma(n=0.1) + geom_jitter(aes(col))
 
 ```
 
@@ -109,11 +109,11 @@ df_model = df %>%
   calculate_ma() %>%
   group_by(individual) %>%
   nest() %>%
-  mutate(model=map(data , function(df) suretype_model(df,individual , clf,.sclist='all')))
+  mutate(model=map(data , function(df) suretype_model(df,individual , clf)))
 head(df_model)
 ```
 
-Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm.
+Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm. The algorithm has effectively filtered out the heterozygous genotypes (m \~ 0)
 
 ```{r After_classification,echo=TRUE,results="show",include=TRUE}
 df_model_unnested = df_model %>%
@@ -122,4 +122,39 @@ head(df_model_unnested)
 df_model_unnested %>%
   set_threshold('rfgda_score',threshold =0.5) %>%
   plot_ma(n=0.1)
+```
+
+An optional parameter of function suretype_model(.) is .sclist that controls samples that will be processed using RF-GDA algorithm (by default, all samples in the dataset are analysed). Following example demonstrates situation when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset.
+
+```{r Sample_list,echo=TRUE,results="show",include=TRUE}
+df %>% 
+  select(individual) %>%
+  distinct()
+
+```
+
+We choose sample **gsm477532** and **gsm477533** for classification.
+
+```{r Subset_classification,echo=TRUE,results="show",include=TRUE}
+sample_subset=list('gsm477532','gsm477533')
+
+
+
+
+df_model = df %>%
+  calculate_ma() %>%
+  group_by(individual) %>%
+  nest() %>%
+  mutate(model=map(data , function(df) suretype_model(df,individual,clf,.sclist=sample_subset)))
+```
+
+Mean and standard deviation of the score per sample clearly shows that only the selected samples were process while all the other samples were assigned score 1 for all genotypes.
+
+```{r  Subset_score_distribution,echo=TRUE,results="show",include=TRUE}
+df_model %>%
+  unnest(c(data ,model)) %>%
+  group_by(individual)  %>%
+  summarize(mean = mean(rfgda_score,na.rm=TRUE),
+    sd = sd(rfgda_score,na.rm=TRUE))
+
 ```
