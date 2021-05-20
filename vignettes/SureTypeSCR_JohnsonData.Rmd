@@ -1,5 +1,5 @@
 ---
-title: "SureTypeSCR -- library for (single cell) SNP array data processing"
+title: "SureTypeSCR -- R package for (single cell) SNP array data"
 author: "Ivan Vogel, Lishan Cai"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 vignette: >
@@ -22,20 +22,18 @@ This tutorial gives basic introduction to the data analysis with SureTypeSCR. Th
 
 # Basic concepts
 
-## Installation of the program and the data
+## Installation of the program and the data and initialization
 
 Both, **SureTypeSCR** and **johnsonspermdata** can be installed from github repository using devtools. The dependencies should be installed automatically.
 
-```{r install,echo=TRUE,results="show",include=TRUE,cache=FALSE}
-#require(nothing, quietly = TRUE)
-
-#library(devtools)
+```{r install, warning=FALSE, cache=FALSE, results="hide",error=FALSE,message=FALSE}
+library(devtools)
 
 ##install  SureTypeSCR  from  github
 devtools::install_github("Meiomap/SureTypeSCR")
 
 ##install  data  package  with  sperm  data (compiled  from  GSE19247)
-#devtools::install_github("Meiomap/johnsonspermdata")
+devtools::install_github("Meiomap/johnsonspermdata")
 
 ```
 
@@ -48,25 +46,29 @@ knitr::opts_knit$set(root.dir=system.file("data",package="johnsonspermdata"))
 
 ```
 
-```{r init, echo=FALSE, warning=FALSE, results='hide'}
+```{r init, echo=TRUE, warning=FALSE, results='hide',error=FALSE,message=FALSE}
 library(SureTypeSCR)
-library(tidyverse)
 library(johnsonspermdata)
-library(magrittr)
-library(ggrepel)
+#library(tidyverse)
+#library(magrittr)
+#library(ggrepel)
 # load  metadata  and  samplesheet  location
 data(metadata ,samplesheet)
 ```
 
-Required manifest and cluster file are provided with the package.
+## Data loading and feature extraction
 
-```{r load,echo=TRUE,results="show",include=TRUE,echo=TRUE}
+Metadata that is required for feature extraction and creation of the basic data frame is deployed with the package. Note that these metadata (except for the samplesheet) are array specific and differ accross Illumina products. The program lists the sample files as being analyzed and gives dimensions of the final data frame to the output (before and after applying internal indexing).
+
+```{r load,echo=TRUE,results="show",include=TRUE,echo=TRUE,cache=TRUE}
 manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
 cluster=system.file("files/HumanCytoSNP-12v2_H.egt",package="SureTypeSCR")
 df = scbasic(samplesheet=samplesheet , bpm=manifest , egt=cluster)
 ```
 
-We filter out markers that don't contain genotypes (intensity-only SNPs) and view the structure of the data frame.
+## Filtering
+
+After loading the basic dataframe **df** we filter out markers that don't contain genotypes (intensity-only SNPs) and view the structure of the data frame.
 
 ```{r filter,echo=TRUE,results="show",include=TRUE}
 #filtering  out  intensity -only  SNPs
@@ -74,6 +76,8 @@ df %<>% dplyr::filter(Chr!=0 & !str_detect(Name ,"cnv"))
 head(df)
 
 ```
+
+## Call rates
 
 Call rates can be calculated per group basis - here per individual (sample) and genotype.
 
@@ -85,25 +89,31 @@ df %>%
 
 ```
 
+## Principal component analysis
+
 Principal component analysis determines relationships between the individuals by reducing n-dimensional representation of SNP array data (samples x number_of_SNPs) into few (here two) dimensions that maximize the variation.
 
-```{r pca,echo=TRUE,results="show",include=TRUE}
+```{r pca,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 df %>%
   plot_pca(features="gtype", metadata=metadata ,by_chrom=FALSE)
 ```
 
-Now we perform MA transformation. MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous B and M\>0 corresponds to homozygous A.
+## MA transformation
 
-```{r  MAtransform,echo=TRUE,results="show",include=TRUE}
+MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous B and M\>0 corresponds to homozygous A.
+
+```{r  MAtransform,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 df %>%
   calculate_ma() %>%
-  plot_ma(n=0.1) + geom_jitter(aes(col))
+  plot_ma(n=0.1)
 
 ```
 
-The classification of the single cell genotypes is now performed via pretrained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data. The classification is performed per sample basis.
+## Single cell genotype classification
 
-```{r classification,echo=TRUE,results="show",include=TRUE}
+The classification of the single cell genotypes is now performed via pretrained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data. The model is created per sample basis.
+
+```{r classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 clf=system.file("files/rf.clf",package="SureTypeSCR")
 df_model = df %>%
   calculate_ma() %>%
@@ -115,7 +125,7 @@ head(df_model)
 
 Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm. The algorithm has effectively filtered out the heterozygous genotypes (m \~ 0)
 
-```{r After_classification,echo=TRUE,results="show",include=TRUE}
+```{r After_classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 df_model_unnested = df_model %>%
   unnest(c(data ,model))
 head(df_model_unnested)
@@ -124,7 +134,9 @@ df_model_unnested %>%
   plot_ma(n=0.1)
 ```
 
-An optional parameter of function suretype_model(.) is .sclist that controls samples that will be processed using RF-GDA algorithm (by default, all samples in the dataset are analysed). Following example demonstrates situation when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset.
+### Conditional processing
+
+An optional parameter of function **suretype_model(.)** is **.sclist** that controls samples that will be processed using RF-GDA algorithm (by default, all samples in the dataset are analysed). Following example demonstrates situation when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset.
 
 ```{r Sample_list,echo=TRUE,results="show",include=TRUE}
 df %>% 
@@ -135,11 +147,8 @@ df %>%
 
 We choose sample **gsm477532** and **gsm477533** for classification.
 
-```{r Subset_classification,echo=TRUE,results="show",include=TRUE}
+```{r Subset_classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 sample_subset=list('gsm477532','gsm477533')
-
-
-
 
 df_model = df %>%
   calculate_ma() %>%
@@ -150,7 +159,7 @@ df_model = df %>%
 
 Mean and standard deviation of the score per sample clearly shows that only the selected samples were process while all the other samples were assigned score 1 for all genotypes.
 
-```{r  Subset_score_distribution,echo=TRUE,results="show",include=TRUE}
+```{r  Subset_score_distribution,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 df_model %>%
   unnest(c(data ,model)) %>%
   group_by(individual)  %>%
@@ -158,3 +167,7 @@ df_model %>%
     sd = sd(rfgda_score,na.rm=TRUE))
 
 ```
+
+## Details
+
+For detailed description of available functions and parameters please see the reference manual (vignette). 

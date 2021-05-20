@@ -1,6 +1,6 @@
 \name{callrate}
 \alias{callrate}
-\title{Calculates callrate as proportion of called SNPs in the input dataframe}
+\title{Calculates call rate as proportion of called SNPs in the input dataframe}
 \usage{
 callrate(.data)
 }

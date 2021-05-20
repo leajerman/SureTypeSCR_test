@@ -5,3 +5,6 @@ R/.Rhistory
 *.tar.gz   
 inst/files/tmp
 inst/files/rf.clf
+vignettes/SureTypeSCR_JohnsonData_files/*
+vignettes/SureTypeSCR_JohnsonData_cache/*
+vignettes/SureTypeSCR_JohnsonData.html
