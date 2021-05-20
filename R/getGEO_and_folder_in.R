@@ -1,4 +1,4 @@
-get_and_folder_in <- function(x,download=TRUE)
+getGEO_and_folder_in <- function(x,download=TRUE)
 {
   metadata=data.frame()
   serverdata=getGEOSuppFiles(x,fetch_files = FALSE,makeDirectory=FALSE,filter_regex='idat.gz') 

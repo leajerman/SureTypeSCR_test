@@ -24,7 +24,7 @@ This tutorial gives basic introduction to the data analysis with SureTypeSCR. Th
 
 ## Installation of the program and the data
 
-Both, SureTypeSCR and johnsonspermdata are installed from github repository using devtools. The dependencies should be installed automatically.
+Both, **SureTypeSCR** and **johnsonspermdata** can be installed from github repository using devtools. The dependencies should be installed automatically.
 
 ```{r install,echo=TRUE,results="show",include=TRUE,cache=FALSE}
 #require(nothing, quietly = TRUE)
@@ -32,13 +32,21 @@ Both, SureTypeSCR and johnsonspermdata are installed from github repository usin
 #library(devtools)
 
 ##install  SureTypeSCR  from  github
-#devtools::install_github("Meiomap/SureTypeSCR")
+devtools::install_github("Meiomap/SureTypeSCR")
 
 ##install  data  package  with  sperm  data (compiled  from  GSE19247)
 #devtools::install_github("Meiomap/johnsonspermdata")
+
 ```
 
 When loaded for the first time, SureTypeSCR will create a python virtual environment and install all required python libraries via python package installer (pip).
+
+```{r setup, include=FALSE}
+require('knitr')
+##setting working directory
+knitr::opts_knit$set(root.dir=system.file("data",package="johnsonspermdata"))
+
+```
 
 ```{r init, echo=FALSE, warning=FALSE, results='hide'}
 library(SureTypeSCR)
@@ -48,15 +56,6 @@ library(magrittr)
 library(ggrepel)
 # load  metadata  and  samplesheet  location
 data(metadata ,samplesheet)
-```
-
-```{r setup, include=FALSE}
-require('knitr')
-##setting working directory
-knitr::opts_knit$set(root.dir=system.file("data",package="johnsonspermdata"))
-
-
-
 ```
 
 Required manifest and cluster file are provided with the package.
@@ -81,7 +80,8 @@ Call rates can be calculated per group basis - here per individual (sample) and 
 ```{r callrates,echo=TRUE,results="show",include=TRUE}
 df %>%
   group_by(individual ,gtype) %>%
-  callrate()
+  callrate() %>%
+  pivot_wider(values_from=Callrate,names_from=gtype)
 
 ```
 
@@ -109,7 +109,7 @@ df_model = df %>%
   calculate_ma() %>%
   group_by(individual) %>%
   nest() %>%
-  mutate(model=map(data , function(df) suretype_model(df,individual , clf)))
+  mutate(model=map(data , function(df) suretype_model(df,individual , clf,.sclist='all')))
 head(df_model)
 ```
 

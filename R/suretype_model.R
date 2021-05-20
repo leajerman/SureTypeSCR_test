@@ -13,7 +13,7 @@ suretype_model <- function(.data,.individual,rf_clf, .sclist='all')
              'rf_score'='rf_ratio:1.0_prob') %>%
       select('rfgda_score','rf_score')  %>%
       as_tibble()
-    write('-------------------', stdout())
+    #write('-------------------', stdout())
   }
   else
   {
