@@ -25,8 +25,6 @@ configure_iaap <- function()
   return(binpath)
 }
 
-
-
 idat_to_gtc <- function(idat_inputfolder,gtc_output,manifest,cluster)
 {
   iaap=configure_iaap()
