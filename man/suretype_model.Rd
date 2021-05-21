@@ -2,9 +2,7 @@
 \alias{suretype_model}
 \title{Create model and perform classification with RF-GDA per sample}
 \usage{
-
 suretype_model(df,individual, clf,.sclist=NULL)))
-
 }
 
 \arguments{

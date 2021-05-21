@@ -20,9 +20,8 @@ SureTypeSCR is an R package for QC and rapid genotyping of single cell SNP array
 
 This tutorial gives basic introduction to the data analysis with SureTypeSCR. The data used in this tutorial is publicly available (Johnson et al.,2010, PMID: 20100701) and subset of it (sperm data) was transformed into an R data package for purpose of this demonstration.
 
-# Basic concepts
 
-## Installation of the program and the data and initialization
+# Installation of the program and the data and initialization
 
 Both, **SureTypeSCR** and **johnsonspermdata** can be installed from github repository using devtools. The dependencies should be installed automatically.
 
@@ -30,10 +29,10 @@ Both, **SureTypeSCR** and **johnsonspermdata** can be installed from github repo
 library(devtools)
 
 ##install  SureTypeSCR  from  github
-devtools::install_github("Meiomap/SureTypeSCR",force=TRUE)
+#devtools::install_github("Meiomap/SureTypeSCR",force=TRUE)
 
 ##install  data  package  with  sperm  data (compiled  from  GSE19247)
-devtools::install_github("Meiomap/johnsonspermdata")
+#devtools::install_github("Meiomap/johnsonspermdata")
 
 ```
 
@@ -46,7 +45,7 @@ knitr::opts_knit$set(root.dir=system.file("data",package="johnsonspermdata"))
 
 ```
 
-```{r init, echo=TRUE, warning=FALSE, results='hide',error=FALSE,message=FALSE}
+```{r init, echo=TRUE, warning=FALSE, results='hide',error=FALSE,message=FALSE,cache=FALSE}
 library(SureTypeSCR)
 library(johnsonspermdata)
 #library(tidyverse)
@@ -56,7 +55,7 @@ library(johnsonspermdata)
 data(metadata ,samplesheet)
 ```
 
-## Data loading and feature extraction
+# Data loading and feature extraction
 
 Metadata that is required for feature extraction and creation of the basic data frame is deployed with the package. Note that these metadata (except for the samplesheet) are array specific and differ accross Illumina products. The program lists the sample files as being analyzed and gives dimensions of the final data frame to the output (before and after applying internal indexing).
 
@@ -77,7 +76,7 @@ head(df)
 
 ```
 
-## Call rates
+# Call rates
 
 Call rates can be calculated per group basis - here per individual (sample) and genotype.
 
@@ -89,7 +88,7 @@ df %>%
 
 ```
 
-## Principal component analysis
+# Principal component analysis
 
 Principal component analysis determines relationships between the individuals by reducing n-dimensional representation of SNP array data (samples x number_of_SNPs) into few (here two) dimensions that maximize the variation.
 
@@ -98,7 +97,7 @@ df %>%
   plot_pca(features="gtype", metadata=metadata ,by_chrom=FALSE)
 ```
 
-## MA transformation
+# MA transformation
 
 MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous B and M\>0 corresponds to homozygous A.
 
@@ -109,11 +108,11 @@ df %>%
 
 ```
 
-## Single cell genotype classification
+# Single cell genotype classification
 
 The classification of the single cell genotypes is now performed via pretrained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data. The model is created per sample basis.
 
-```{r classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
+```{r classification,echo=TRUE,results="show",include=TRUE,cache=FALSE}
 clf=system.file("files/rf.clf",package="SureTypeSCR")
 df_model = df %>%
   calculate_ma() %>%
@@ -134,7 +133,7 @@ df_model_unnested %>%
   plot_ma(n=0.1)
 ```
 
-### Conditional processing
+## Conditional processing
 
 An optional parameter of function **suretype_model(.)** is **.sclist** that controls samples that will be processed using RF-GDA algorithm (by default, all samples in the dataset are analysed). Following example demonstrates situation when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset.
 
@@ -168,6 +167,6 @@ df_model %>%
 
 ```
 
-## Details
+# Further information
 
 For detailed description of available functions and parameters please see the reference manual (vignette).
