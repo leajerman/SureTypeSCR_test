@@ -1,4 +1,4 @@
-suretype_model <- function(.data,.individual,rf_clf, .sclist='all')
+suretype_model <- function(.data,.individual,rf_clf, .sclist=NULL)
 {
   #print(.individual)
   #print(.sclist)

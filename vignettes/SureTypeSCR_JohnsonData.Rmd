@@ -30,7 +30,7 @@ Both, **SureTypeSCR** and **johnsonspermdata** can be installed from github repo
 library(devtools)
 
 ##install  SureTypeSCR  from  github
-devtools::install_github("Meiomap/SureTypeSCR")
+devtools::install_github("Meiomap/SureTypeSCR",force=TRUE)
 
 ##install  data  package  with  sperm  data (compiled  from  GSE19247)
 devtools::install_github("Meiomap/johnsonspermdata")
