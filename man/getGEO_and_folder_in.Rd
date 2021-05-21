@@ -6,8 +6,7 @@ getGEO_and_folder_in(x,download=FALSE)
 }
 \arguments{
 \item{x}{GEO record ID}
-\item{download}{boolean flag indicating whether to download the data (\code{TRUE}) or just the metadata (\code{FALSE})
-
+\item{download}{boolean flag indicating whether to download the data (\code{TRUE}) or just the metadata (\code{FALSE})}
 }
 \value{
 Data frame with metadata

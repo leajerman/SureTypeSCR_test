@@ -13,7 +13,7 @@ idat_to_gtc(df)
 \value{
 }
 \description{
-Convert pandas dataframe to Data object and rearrange the index level
+Convert idat to gtc using IAAP cli
 }
 \examples{
 
@@ -29,8 +29,3 @@ df <- scbasic(manifest_path,cluster_path,samplesheet)
 # create Data object and rearrange the index
 df <- create_from_frame(df)
 }
-
-
-
-idat_inputfolder,gtc_output,manifest,cluster)
-                          
