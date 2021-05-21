@@ -3,8 +3,7 @@ Title: Interface to python based package SureTypeSC via reticulate
 Description: SureTypeSCR is R package for QC of (single cell) SNP arrays and single cell genotype scoring
 Version: 0.99.0
 Author: Ivan Vogel, Lishan Cai
-Suggests: testthat,
-	rmarkdown
+Suggests: testthat,rmarkdown,markdown
 Depends: R (>= 3.5.0), reticulate, tidyverse, magrittr, knitr, BiocStyle,ggrepel
 Maintainer: Ivan Vogel <ivogel@sund.ku.dk>
 License: Artistic-2.0
