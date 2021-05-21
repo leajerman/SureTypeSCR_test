@@ -125,7 +125,7 @@ head(df_model)
 
 Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm. The algorithm has effectively filtered out the heterozygous genotypes (m \~ 0)
 
-```{r After_classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
+```{r After_classification,echo=TRUE,results="show",include=TRUE,cache=FALSE}
 df_model_unnested = df_model %>%
   unnest(c(data ,model))
 head(df_model_unnested)
@@ -170,4 +170,4 @@ df_model %>%
 
 ## Details
 
-For detailed description of available functions and parameters please see the reference manual (vignette). 
+For detailed description of available functions and parameters please see the reference manual (vignette).
