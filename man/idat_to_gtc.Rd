@@ -1,11 +1,16 @@
-\name{create_from_frame}
-\alias{create_from_frame}
-\title{convert pandas dataframe to Data object}
+\name{idat_to_gtc}
+\alias{idat_to_gtc}
+\title{Convert idat to gtc using IAAP cli}
 \usage{
 create_from_frame(df)
 }
 \arguments{
-\item{df}{genotyping pandas dataframe from scbasic function}
+\item{idat_inputfolder}{input folder with stored idat files}
+\item{gtc_output}{output folder for the GTC files}
+\item{manifest}{path to manifest file}
+\item{cluster}{path to cluster file}
+idat_inputfolder,gtc_output,manifest,cluster
+
 
 }
 \value{
@@ -31,3 +36,4 @@ df <- create_from_frame(df)
 
 
 }
+                          

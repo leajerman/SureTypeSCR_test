@@ -5,30 +5,25 @@
 getGEO_and_folder_in(x,download=FALSE)
 }
 \arguments{
-\item{x}{genotyping pandas dataframe from scbasic function}
+\item{x}{GEO record ID}
 \item{download}{boolean flag indicating whether to download the data (\code{TRUE}) or just the metadata (\code{FALSE})
 
 }
 \value{
-Data object with index rearrangement (multi-leve index)
-
+Data frame with metadata
 }
 \description{
-Convert pandas dataframe to Data object and rearrange the index level
+Downloads metadata (and data) for GEO records specified in \code{x}.
 }
 \examples{
+library(GEOquery)
 
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
+gse <- getGEO("GSE19247",GSEMatrix = TRUE)
 
-# get genotyping data from gtc files and meta file
-df <- scbasic(manifest_path,cluster_path,samplesheet)
+samplelist_sperm=as.data.frame(gse$`GSE19247-GPL6985_series_matrix.txt.gz`) %>% 
+  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
+  rownames()  
 
-
-# create Data object and rearrange the index
-df <- create_from_frame(df)
-
-
+metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),function(x) getGEO_and_folder_in(x,download=TRUE))
+metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
 }

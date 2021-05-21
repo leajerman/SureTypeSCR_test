@@ -11,7 +11,7 @@ suretype_model(df,individual, clf,.sclist=NULL)))
 \item{df}{Basic dataframe with precalculated M and A features}
 \item{individual}{current sample name to be classified}
 \item{clf}{path to the classifier - currently support for Random Forest}
-\item{.sclist}{list of samples to be processed stored in list()}
+\item{.sclist}{list of samples to be processed stored in list(), default is \code{NULL}}
 \value{returns data frame with two columns corresponding to the classification results: \code{rfgda_score} and \code{rf_score}, while \code{rfgda_score} is score calculated by cascade RF-GDA algorithm and \code{rf_score} is score calculated by RF.     
 }
 
