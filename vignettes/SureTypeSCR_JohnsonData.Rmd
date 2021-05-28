@@ -16,10 +16,9 @@ output:
 
 # Introduction
 
-SureTypeSCR is an R package for QC and rapid genotyping of single cell SNP array data. It encapsulates previously developed library SureTypeSC (Vogel et al., 2019, PMID: 31116387). The core consists of a two layered machine learning method that assigns a quality score to each SNP in an array. On top of that, SureTypeSCR implements various QC strategies to examine the data. SureTypeSCR is extensively using packages from the tidyverse collection thereby allowing to apply modern data science approach to query the data.
+SureTypeSCR is an R package for QC and rapid genotyping of single cell SNP array data. It encapsulates previously developed library SureTypeSC ([paper](https://academic.oup.com/bioinformatics/article/35/23/5055/5497252)). The core consists of a two layered machine learning method that assigns a quality score to each SNP in an array. On top of that, SureTypeSCR implements various QC strategies to examine the data. SureTypeSCR is extensively using packages from the tidyverse collection thereby allowing to apply modern data science approach to query the data.
 
-This tutorial gives basic introduction to the data analysis with SureTypeSCR. The data used in this tutorial is publicly available (Johnson et al.,2010, PMID: 20100701) and subset of it (sperm data) was transformed into an R data package for purpose of this demonstration.
-
+This tutorial gives basic introduction to the data analysis with SureTypeSCR. The data used in this tutorial is publicly available ([paper](https://pubmed.ncbi.nlm.nih.gov/20100701/) and [data](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE19247)) and subset of it (sperm data amplified by MDA) was transformed into an R data package for purpose of this demonstration.
 
 # Installation of the program and the data and initialization
 
@@ -57,7 +56,7 @@ data(metadata ,samplesheet)
 
 # Data loading and feature extraction
 
-Metadata that is required for feature extraction and creation of the basic data frame is deployed with the package. Note that these metadata (except for the samplesheet) are array specific and differ accross Illumina products. The program lists the sample files as being analyzed and gives dimensions of the final data frame to the output (before and after applying internal indexing).
+Metadata (manifest file \*.bpm and cluster file \*.egt) that is required for feature extraction and creation of the basic data frame is deployed with the package. Note that these metadata (except for the samplesheet) are array specific and differ accross Illumina products. The program lists the sample files as being analyzed and gives dimensions of the final data frame to the output (before and after applying internal indexing).
 
 ```{r load,echo=TRUE,results="show",include=TRUE,echo=TRUE,cache=TRUE}
 manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
@@ -67,7 +66,7 @@ df = scbasic(samplesheet=samplesheet , bpm=manifest , egt=cluster)
 
 ## Filtering
 
-After loading the basic dataframe **df** we filter out markers that don't contain genotypes (intensity-only SNPs) and view the structure of the data frame.
+After loading the basic dataframe **df** we filter out markers that do not contain genotypes (so called intensity-only SNPs) and view the structure of the data frame.
 
 ```{r filter,echo=TRUE,results="show",include=TRUE}
 #filtering  out  intensity -only  SNPs
@@ -78,7 +77,7 @@ head(df)
 
 # Call rates
 
-Call rates can be calculated per group basis - here per individual (sample) and genotype.
+Call rates can be calculated per group basis - here per individual (sample) and genotype and functions from tidyverse can be used to reshape the results for better readability.
 
 ```{r callrates,echo=TRUE,results="show",include=TRUE}
 df %>%
@@ -90,7 +89,7 @@ df %>%
 
 # Principal component analysis
 
-Principal component analysis determines relationships between the individuals by reducing n-dimensional representation of SNP array data (samples x number_of_SNPs) into few (here two) dimensions that maximize the variation.
+Principal component analysis determines relationships between the individuals by reducing n-dimensional representation of SNP array data (n is equal to total number of SNPs that call in every sample) into few (here two) dimensions that maximize the variation (explain most of the variability). The user has an option whether to calculate the PCA per chromosome basis (parameter **by_chrom**), which can reveal potential aneuploidies or just to reveal relationship between samples across all SNPs in one PCA.
 
 ```{r pca,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 df %>%
@@ -99,7 +98,7 @@ df %>%
 
 # MA transformation
 
-MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous B and M\>0 corresponds to homozygous A.
+MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous B and M\>0 corresponds to homozygous A. As explained in Vogel *et al.* (2019), MA transformation minimizes the intra-group variability and allows visualise the genotyping clusters (AA, BB and AB) across the whole dataset.
 
 ```{r  MAtransform,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 df %>%
@@ -110,7 +109,7 @@ df %>%
 
 # Single cell genotype classification
 
-The classification of the single cell genotypes is now performed via pretrained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data. The model is created per sample basis.
+The classification of the single cell genotypes is performed via pretrained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data and per sample basis.
 
 ```{r classification,echo=TRUE,results="show",include=TRUE,cache=FALSE}
 clf=system.file("files/rf.clf",package="SureTypeSCR")
@@ -122,7 +121,7 @@ df_model = df %>%
 head(df_model)
 ```
 
-Now we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm. The algorithm has effectively filtered out the heterozygous genotypes (m \~ 0)
+If we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA algorithm, we can see that the algorithm has effectively filtered out the heterozygous genotypes (m \~ 0). The heterozygous genotypes are likely artefacts and products of erroneous whole genome amplification (WGA) as sperm cells are haploid and there were no aneuploidies reported on these samples (Johnson *et al.*, 2010).
 
 ```{r After_classification,echo=TRUE,results="show",include=TRUE,cache=FALSE}
 df_model_unnested = df_model %>%
@@ -135,7 +134,7 @@ df_model_unnested %>%
 
 ## Conditional processing
 
-An optional parameter of function **suretype_model(.)** is **.sclist** that controls samples that will be processed using RF-GDA algorithm (by default, all samples in the dataset are analysed). Following example demonstrates situation when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset.
+An optional parameter of function **suretype_model(.)** is **.sclist** that controls samples that will be processed using RF-GDA algorithm (by default, all samples in the dataset are analysed). The following example demonstrates use case when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset and we wish to filter those samples out. First we list all sample names in the dataset:
 
 ```{r Sample_list,echo=TRUE,results="show",include=TRUE}
 df %>% 
@@ -144,7 +143,7 @@ df %>%
 
 ```
 
-We choose sample **gsm477532** and **gsm477533** for classification.
+And now we only choose sample **gsm477532** and **gsm477533** for classification.
 
 ```{r Subset_classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
 sample_subset=list('gsm477532','gsm477533')
@@ -169,4 +168,4 @@ df_model %>%
 
 # Further information
 
-For detailed description of available functions and parameters please see the reference manual (vignette).
+For detailed description of available functions and parameters please see the reference manual (vignette). You can invoke help for a particular function by typing ?function_name or

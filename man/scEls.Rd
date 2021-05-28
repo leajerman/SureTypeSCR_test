@@ -11,14 +11,11 @@ list of (S3) "python.builtin.module"
 mediate access to python modules
 }
 \note{
-Returns a list with elements sc (SureTypeSC), pd (pandas)each
-referring to python modules.
+Returns a list containing objects \code{sc} and \code{pd} that refer to Python modules SureTypeSC and pandas, respectively.
 }
 \examples{
 els = scEls()
-
 els
-
 ##$sc
 ##Module(SureTypeSC)
 

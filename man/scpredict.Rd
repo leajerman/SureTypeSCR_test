@@ -1,85 +1,22 @@
 \name{scpredict}
 \alias{scpredict}
-\title{Predictions from Random Forest classifier or Gaussian Discriminant Analysis}
+\title{Internal function used for prediction with \code{suretype_model(.)}}
 \usage{
-
-scpredict(clf,test,clftype='rf')
-
+scpredict(.data,clf,clftype='rf')
 }
 
 \arguments{
-\item{clf}{classifier load by using scload}
-\item{test}{Data object including m and a feature}
-\item{clftype}{The type of classifier 
-(rf: Random Forest; 
-
-gda: Gaussian Discriminant Analysis; 
-
-rf-gda: the cascade of Random Forest and Gaussian Discriminant Analysis)}
-
+\item{.data}{data frame containing \code{m} and \code{a} features}
+\item{clf}{instance of a classifier}
+\item{clftype}{The type of classifier}
 }
 \value{
-The prediction Data object.  
-
-The predicted items might include:
-
-rf_ratio:1_pred: Random Forest prediction (binary) 
-
-rf_ratio:1_prob: Random Forest Score for the positive class
-
-gda_ratio:1_prob: Gaussian Discriminant Analysis score for the positive class 
-
-gda_ratio:1_pred: Gaussian Disciminant Analysis prediction (binary)
-
-rf-gda_ratio:1_prob: combined 2-layer RF and GDA - probability score for the positive class
-
-rf-gda_ratio:1_pred: binary prediction of RF-GDA 
-
+data frame with predicted score using given classifier in \code{clf}
 }
 
-\description{Predictions from Random Forest classifier or Gaussian Discriminant Analysis
-
-}
+\description{Internal function that evaluates score given an instance of classifier. The function is used in \code{suretype_model(.)}}
 %\description{
 %
 %}
-\examples{
-
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
-clf_rf_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
-clf_gda_path = system.file('files/clf_30trees_7228_ratio1_lightweight.clf',package='SureTypeSCR')
 
 
-
-# The Random Forest classifier
-clf_rf <- scload(clf_rf_path) 
-
-# The Gaussian Disciminant Analysis
-clf_gda <- scload(clf_gda_path) 
-
-# get genotyping data from gtc files and meta file
-df <- scbasic(manifest_path,cluster_path,samplesheet)
- 
-# create Data object and rearrange the index 
-dfs <- create_from_frame(df) 
-
-# extract the chromosomes 1 and 2
-dfs <- restrict_chrom(dfs,c('1','2')) 
-
-# mask the Gencall score lower than 0.01
-dfs <- apply_thresh(dfs,0.01) 
-
-# calculate the m and a feature
-dfs <- calculate_ma(dfs) 
-
-# prediction by Random Forest
-result_rf <- scpredict(clf_rf,dfs,clftype='rf')
-
-# prediction by Guassian Discriminate Analysis
-result_gda <- scpredict(clf_gda,dfs,clftype='gda')
-
-
-}

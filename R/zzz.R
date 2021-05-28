@@ -12,7 +12,7 @@
      {
         stop("Pretrained classifier not found in the package directory")
      } else {
-        unzip(zclfpath,exdir=pkgpathfiles)
+        utils::unzip(zclfpath,exdir=pkgpathfiles)
      }
   }
   
@@ -33,35 +33,35 @@
   chk <- try(import("IlluminaBeadArrayFiles"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
-    print('Installing supporting python package: IlluminaBeadArrayFiles')
+    packageStartupMessage('Installing supporting python package: IlluminaBeadArrayFiles')
     virtualenv_install("r-reticulate", "git+https://github.com/Illumina/BeadArrayFiles.git")
     #stop("IlluminaBeadArrayFiles not found in python environment")
   }    
   chk <- try(import("numpy"),silent=TRUE)
   if (inherits(chk, "try-error")) 
   {
-    print('Installing supporting python package: numpy')
+    packageStartupMessage('Installing supporting python package: numpy')
     virtualenv_install("r-reticulate", "numpy")
     #stop("numpy not found in python environment")
   }
   chk <- try(import("pandas"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
-    print('Installing supporting python package: pandas')
+    packageStartupMessage('Installing supporting python package: pandas')
     virtualenv_install("r-reticulate", "pandas")
     #stop("pandas not found in python environment")
   } 
   chk <- try(import("sklearn"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
-    print('Installing supporting python package: sklearn')
+    packageStartupMessage('Installing supporting python package: sklearn')
     virtualenv_install("r-reticulate", "sklearn") 
     #stop("sklearn not found in python environment")
   }
   chk <- try(import("SureTypeSC"),silent=TRUE)
   if (inherits(chk, "try-error")) 
   {
-    print('Installing supporting python package: SureTypeSC')
+    packageStartupMessage('Installing supporting python package: SureTypeSC')
     virtualenv_install("r-reticulate", "SureTypeSC")
     #stop("SureTypeSC not found in python environment")
   }

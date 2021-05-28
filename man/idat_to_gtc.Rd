@@ -1,8 +1,8 @@
 \name{idat_to_gtc}
 \alias{idat_to_gtc}
-\title{Convert idat to gtc using IAAP cli}
+\title{Convert raw itensity IDAT files to GTC using IAAP-cli}
 \usage{
-idat_to_gtc(df)
+idat_to_gtc(idat_inputfolder,gtc_output,manifest,cluster)
 }
 \arguments{
 \item{idat_inputfolder}{input folder with stored idat files}
@@ -13,19 +13,25 @@ idat_to_gtc(df)
 \value{
 }
 \description{
-Convert idat to gtc using IAAP cli
+The raw itensity data (red and green channel) are processed into GTC using Illumina's IAAP-cli. Function runs \code{configure_iaap()} before instantiating IAAP-cli to make sure IAAP-cli is properly configured. 
 }
 \examples{
+#library(GEOquery)
+#gse <- getGEO("GSE19247",GSEMatrix = TRUE)
 
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
+#samplelist_sperm=as.data.frame(gse$`GSE19247-GPL6985_series_matrix.txt.gz`) %>% 
+#  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
+#  rownames()  
 
-# get genotyping data from gtc files and meta file
-df <- scbasic(manifest_path,cluster_path,samplesheet)
+#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),function(x) SureTypeSCR::getGEO_and_folder_in(x,download=TRUE))
+#metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
 
+#manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
+#cluster=system.file("files/HumanCytoSNP-12v2_H.egt",package="SureTypeSCR")
 
-# create Data object and rearrange the index
-df <- create_from_frame(df)
+#for (ar in unique(metadf_sperm_merged$arrayid))
+#{
+#  idat_to_gtc(ar,'GTC',manifest,cluster)
+#}
+
 }

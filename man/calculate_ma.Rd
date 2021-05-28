@@ -1,18 +1,18 @@
 \name{calculate_ma}
 \alias{calculate_ma}
-\title{Calculated M (logarithmic difference) and A (logarithmic average) of itensity signals}
+\title{Calculate M (logarithmic difference) and A (logarithmic average) of allelic intensities}
 \usage{
-calculate_ma(.data)
+calculate_ma(df)
 }
 \arguments{
-\item{df}{data frame from \code{scbasic()} or compatible}
+\item{df}{data frame from \code{scbasic(.)} or compatible}
 }
 \value{
-\code{.data} with extra columns representing the results of MA transformation (m, a, m_raw and a_raw)
+\code{df} with extra columns representing the results of MA transformation (m, a, m_raw and a_raw)
 }
 
 \description{
-Logartihmic transformation is a preliminary step for classification using SureTypeSC 
+Function applies Logartihmic transformation on signal intensities which is a preliminary step for classification using SureTypeSC. 
 }
 \examples{
 setwd(system.file(package='SureTypeSCR'))
@@ -23,6 +23,6 @@ cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 #Load data
 df=scbasic(manifest,cluster,samplesheet)
 
-#calculate MA transform and store in the original dataframe using margittr %<>% operator
+#calculate MA transform and store in the original dataframe
 df %<>% calculate_ma()
 }

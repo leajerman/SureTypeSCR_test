@@ -8,30 +8,24 @@ callrate(.data)
 \item{.data}{data frame from \code{scbasic} or compatible}
 }
 \value{
-The callrate values of all samples
+Table with call rate(s) of the input data frame.
 }
 
 \description{
-Calculates callrate as proportion of called SNPs in the input dataframe
+Calculate call rate as proportion of called SNPs in the input dataframe.
 }
 %\description{
 %
 %}
 \examples{
-
-# parsing file from gtc raw files
-
-
 setwd(system.file(package='SureTypeSCR'))
 
 samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
 manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
 cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 
-
 #Load data
 df=scbasic(manifest,cluster,samplesheet)
-
 
 #Get overall callrate
 df %>% callrate() 

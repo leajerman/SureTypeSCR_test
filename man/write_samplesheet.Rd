@@ -1,32 +1,40 @@
-\name{suretype_model}
-\alias{suretype_model}
-\title{Create model and perform classification with RF-GDA per sample}
+\name{write_samplesheet}
+\alias{write_samplesheet}
+\title{Function creates samplesheet compatible with SureTypeSCR}
 \usage{
-suretype_model(df,individual, clf,.sclist=NULL)))
+write_samplesheet(filename,array_positions,gtc_output,manifest,experiment_name='Experiment1',project_name='Project1',investigator_name='Investigator1')
 }
 
 \arguments{
-\item{df}{Basic dataframe with precalculated M and A features}
-\item{individual}{current sample name to be classified}
-\item{clf}{path to the classifier - currently support for Random Forest}
-\item{.sclist}{list of samples to be processed stored in \code{list()}}
-\value{returns data frame with two columns corresponding to the classification results: \code{rfgda_score} and \code{rf_score}, while \code{rfgda_score} is score calculated by cascade RF-GDA algorithm and \code{rf_score} is score calculated by RF.}
+\item{filename}{name/path of the newly created sample sheet}
+\item{array_positions}{data frame storing metadata about sample id, array id and position, following columns are required: \code{sampleid,arrayid,position}}
+\item{gtc_output}{path where GTC files are stored}
+\item{manifest}{name of the manifest file}
+\item{experiment_name}{experiment name}
+\item{project_name}{project name}
+\item{investigator_name}{investigator name}
 }
+\value{writes external file to \code{filename}}
 
-\description{suretype_model is almost always use with in connection with \code{group_by(invidiual)} and \code{nest()} to create classification model per sample (see example below)}
+
+\description{Function is used in case data was converted from idat and sample sheet was not available with the data.}
 %\description{
 %
 %}
 \examples{
-  setwd(system.file(package='SureTypeSCR'))
-  samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
-  manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
-  cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
-  clf=system.file("files/rf.clf",package="SureTypeSCR")
-  
-  df_model = df %>%
-  calculate_ma() %>%
-  group_by(individual) %>%
-  nest() %>%
-  mutate(model=map(data , function(df) suretype_model(df,individual, clf,.sclist=list('gsm477563')))
+# library(GEOquery)
+
+#gse <- getGEO("GSE19247",GSEMatrix = TRUE)
+#manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
+
+#samplelist_sperm=as.data.frame(gse$`GSE19247-GPL6985_series_matrix.txt.gz`) %>% 
+#  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
+#  rownames()  
+
+#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),function(x) getGEO_and_folder_in(x,download=TRUE))
+#metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
+
+
+
+#SureTypeSCR::write_samplesheet('samplesheet.csv',metadf_sperm_merged,'GTC',manifest)
 }

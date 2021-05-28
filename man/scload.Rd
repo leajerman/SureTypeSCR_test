@@ -1,11 +1,11 @@
 \name{scload}
 \alias{scload}
-\title{Load classifier}
+\title{Load classifier from file}
 \usage{
 scload(filename)
 }
 \arguments{
-\item{filename}{a pathname to an classifier}
+\item{filename}{path to a file with classifier}
 
 }
 \value{
@@ -13,7 +13,7 @@ instance of a classifier
 }
 
 \description{
-Load pretrained classifier
+Load pre-trained classifier from file.
 }
 %\description{
 %
@@ -22,7 +22,7 @@ Load pretrained classifier
 
 
 #gtc_path=system.file('files/GTCs',package='SureTypeSCR')
-samplesheet=system.file('files/GSE19247_embryos.csv',package='SureTypeSCR')
+samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
 manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
 cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 clf=system.file('files/rf.clf',package='SureTypeSCR')

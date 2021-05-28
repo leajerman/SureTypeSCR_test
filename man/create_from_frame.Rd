@@ -1,6 +1,6 @@
 \name{create_from_frame}
 \alias{create_from_frame}
-\title{convert pandas dataframe to Data object}
+\title{Internal function for converting between python structures}
 \usage{
 create_from_frame(df)
 }
@@ -9,25 +9,11 @@ create_from_frame(df)
 
 }
 \value{
-Data object with index rearrangement (multi-leve index)
+Instance of class Data from Python SureTypeSC library with multiindex.
 
 }
 \description{
-Convert pandas dataframe to Data object and rearrange the index level
+This functions is used internally in \code{scbasic} and converts python data frame in to SureTypeSC's data object.
 }
 \examples{
-
-gtc_path = system.file("files/GTCs",package='SureTypeSCR')
-cluster_path = system.file('files/HumanKaryomap-12v1_A.egt',package='SureTypeSCR')
-manifest_path = system.file('files/HumanKaryomap-12v1_A.bpm',package='SureTypeSCR')
-samplesheet = system.file('files/Samplesheetr.csv',package='SureTypeSCR')
-
-# get genotyping data from gtc files and meta file
-df <- scbasic(manifest_path,cluster_path,samplesheet)
-
-
-# create Data object and rearrange the index
-df <- create_from_frame(df)
-
-
 }
