@@ -19,7 +19,7 @@ library('devtools')
 devtools::install_github("Meiomap/SureTypeSCR")
 ```
 
-## Initialization and data
+## Package initialization and sample data loading
 When loaded for the first time, SureTypeSCR will create a python virtual environment and install all required python libraries via python package installer (pip). A sample data and metadata deployed with the package can be used for testing whether the pakcage was installed and loaded correctly.
 
 ```R
@@ -38,7 +38,8 @@ df=scbasic(manifest,cluster,samplesheet)
 
 ## Documentation
 
-For tutorial vignette and reference manual, please refer to doc/ and doc/, respectively. An inline help for a particular function can be invoked withing the code by typing ?function_name
+For tutorial vignette and reference manual, please refer to [tutorial](subpro/subtext.md) and [reference manual](inst/doc/SureTypeSCR-reference_manual.pdf)
+doc/ and doc/, respectively. An inline help for a particular function can be invoked withing the code by typing ?function_name
 
 
 ## Further information
