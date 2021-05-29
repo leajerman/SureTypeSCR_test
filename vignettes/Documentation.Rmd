@@ -1,0 +1,257 @@
+---
+title: "SureTypeSCR -- R package for (single cell) SNP array data processing"
+author: "Ivan Vogel, Lishan Cai"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{SureTypeSCR overview}
+  %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::pdf_document:
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+# Introduction
+
+SureTypeSCR is an R package for QC and rapid genotyping of single cell SNP array data. It encapsulates previously developed library SureTypeSC ([paper](https://academic.oup.com/bioinformatics/article/35/23/5055/5497252)). The core consists of a two layered machine learning method that assigns a quality score to each SNP in an array. On top of that, SureTypeSCR implements various QC strategies to examine the data using packages from the tidyverse collection.
+
+This tutorial gives basic introduction to the data analysis with SureTypeSCR. The data used in this tutorial is publicly available ([paper](https://pubmed.ncbi.nlm.nih.gov/20100701/) and [data](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE19247)) and subset of it (sperm data amplified by MDA) was transformed into an R data package ([johnsonspermdata](https://github.com/Meiomap/johnsonspermdata)) for purpose of this demonstration.
+
+# Installation
+
+Both, **SureTypeSCR** and **johnsonspermdata** can be installed from github repository using devtools. The dependencies will be installed automatically.
+
+```{r install, warning=FALSE, cache=FALSE, results="hide",error=FALSE,message=FALSE}
+library(devtools)
+
+##install  SureTypeSCR  from  github
+#devtools::install_github("Meiomap/SureTypeSCR",force=TRUE)
+
+##install  data  package  with  sperm  data (compiled  from  GSE19247)
+#devtools::install_github("Meiomap/johnsonspermdata")
+
+```
+
+When loaded for the first time, SureTypeSCR will create a python virtual environment and install all required python libraries via python package installer (pip). Besides the actual data in GTC format, the R data package **johnsonspermdata** contains  samplesheet and data frame with metadata that will be used for loading and plotting, respectively.
+
+```{r setup, include=FALSE}
+require('knitr')
+##setting working directory
+knitr::opts_knit$set(root.dir=system.file("data",package="johnsonspermdata"))
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE)
+
+
+```
+
+```{r init, echo=TRUE, warning=FALSE, results='hide',error=FALSE,message=FALSE,cache=FALSE}
+library(SureTypeSCR)
+library(johnsonspermdata)
+#library(tidyverse)
+#library(magrittr)
+#library(ggrepel)
+# load  metadata  and  samplesheet  location
+data(metadata ,samplesheet)
+```
+
+# Data loading and basic operations
+
+The manifest file \*.bpm and cluster file \*.egt) that are required for feature extraction and creation of the basic data frame are deployed with the package. Note that these files are array specific and differ accross Illumina products. The program lists the sample files as being analyzed and reports dimensions of the final data frame to the output (before and after applying internal indexing).
+
+```{r load,echo=TRUE,results="show",include=TRUE,echo=TRUE,cache=TRUE}
+manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
+cluster=system.file("files/HumanCytoSNP-12v2_H.egt",package="SureTypeSCR")
+df = scbasic(samplesheet=samplesheet , bpm=manifest , egt=cluster)
+```
+
+## Filtering
+
+After loading the basic dataframe **df** we filter out markers that do not contain genotypes (so called intensity-only SNPs) and view the structure of the data frame.
+
+```{r filter,echo=TRUE,results="show",include=TRUE}
+#filtering  out  intensity -only  SNPs
+df %<>% dplyr::filter(Chr!=0 & !str_detect(Name ,"cnv"))
+head(df)
+
+```
+
+## Call rates
+
+Call rates can be calculated per group basis - here per individual (sample) and genotype and functions from tidyverse can be used to reshape the results for better readability.
+
+```{r callrates,echo=TRUE,results="show",include=TRUE}
+df %>%
+  group_by(individual ,gtype) %>%
+  callrate() %>%
+  pivot_wider(values_from=Callrate,names_from=gtype)
+
+```
+
+# Principal component analysis
+
+Principal component analysis determines relationships between the individuals by reducing n-dimensional representation of SNP array data (n is equal to total number of SNPs that call in every sample) into few (here two) most important dimensions that maximize the variation (explain most of the variability). The user has an option whether to calculate the PCA per chromosome basis (parameter **by_chrom**), which can reveal potential aneuploidies or just to reveal relationship between samples across all SNPs in one PCA.
+
+```{r pca,echo=TRUE,results="show",include=TRUE,cache=TRUE}
+df %>%
+  plot_pca(features="gtype", metadata=metadata ,by_chrom=FALSE)
+```
+
+# MA transformation
+
+MA transformation displays intensities as logarithmic average (A) and logarithmic difference (M). Roughly speaking, M\~0 corresponds to heterozygous genotypes, M\<0 corresponds to homozygous BB and M\>0 corresponds to homozygous AA. As explained in Vogel *et al.* (2019), MA transformation minimizes the intra-group variability and allows to visualise the genotyping clusters (AA, BB and AB) from the whole dataset on one plot.
+
+```{r  MAtransform,echo=TRUE,results="show",include=TRUE,cache=TRUE}
+df %>%
+  calculate_ma() %>%
+  plot_ma(n=0.1)
+
+```
+
+# Single cell genotype classification
+
+The classification of the single cell genotypes is performed via pre-trained classifier (Random Forest) that is distributed within the package. A second layer of the algorithm (Gaussian Discriminant Analysis) is executed directly on the data and per sample basis.
+
+```{r classification,echo=TRUE,results="show",include=TRUE,cache=FALSE}
+clf=system.file("files/rf.clf",package="SureTypeSCR")
+df_model = df %>%
+  calculate_ma() %>%
+  group_by(individual) %>%
+  nest() %>%
+  mutate(model=map(data , function(df) suretype_model(df,individual , clf)))
+head(df_model)
+```
+
+If we visualise the MA plot again - this time for the filtered data to explore the effect of the RF-GDA, we can see that the algorithm has effectively filtered out the heterozygous genotypes (m \~ 0). The heterozygous genotypes are likely artefacts and products of erroneous whole genome amplification (WGA) as sperm cells are haploid and there were no aneuploidies reported on these samples (Johnson *et al.*, 2010).
+
+```{r After_classification,echo=TRUE,results="show",include=TRUE,cache=FALSE}
+df_model_unnested = df_model %>%
+  unnest(c(data ,model))
+head(df_model_unnested)
+df_model_unnested %>%
+  set_threshold('rfgda_score',threshold =0.5) %>%
+  plot_ma(n=0.1)
+```
+
+## Conditional processing
+
+An optional parameter of function **suretype_model(.)** is **.sclist** that controls samples that will be processed using the RF-GDA algorithm (by default, all samples in the dataset are analysed). The following example demonstrates use case when we only want to analyze subset of samples as single cells - this is particularly useful in case there are also bulk DNA samples (i.e. parental genotypes) in the dataset and we wish to filter those samples out. First we list all sample names in the dataset:
+
+```{r Sample_list,echo=TRUE,results="show",include=TRUE}
+df %>% 
+  select(individual) %>%
+  distinct()
+
+```
+
+And now we only choose sample **gsm477532** and **gsm477533** for classification.
+
+```{r Subset_classification,echo=TRUE,results="show",include=TRUE,cache=TRUE}
+sample_subset=list('gsm477532','gsm477533')
+
+df_model = df %>%
+  calculate_ma() %>%
+  group_by(individual) %>%
+  nest() %>%
+  mutate(model=map(data , function(df) suretype_model(df,
+                                                      individual,
+                                                      clf,
+                                                      .sclist=sample_subset)))
+```
+
+Mean and standard deviation of the score per sample clearly shows that only the selected samples were process while all the other samples were assigned score 1 for all genotypes.
+
+```{r  Subset_score_distribution,echo=TRUE,results="show",include=TRUE,cache=TRUE}
+df_model %>%
+  unnest(c(data ,model)) %>%
+  group_by(individual)  %>%
+  summarize(mean = mean(rfgda_score,na.rm=TRUE),
+    sd = sd(rfgda_score,na.rm=TRUE))
+
+```
+
+# Converting idat to gtc
+
+In some scenarios, the data is present in idat format - format that only stores the raw intensities and some other metadata and requires preprocessing,  normalization and genotyping. SureTypeSCR is equipped with simple wrapper that facilitates conversion from IDAT to GTC. Illumina's IAAP-cli is required for running the conversion and the user is guided to download this software. We demonstrate the conversion on publicly available sperm data from the GEO database. Following entities are required (on the top of SureTypeSCR dependencies) to run this demo:
+
+-   IAAP CLI ([<https://emea.support.illumina.com/downloads/iaap-genotyping-cli.html>](https://emea.support.illumina.com/downloads/iaap-genotyping-cli.html){.uri}) - the user will be requested to choose path to this software at first run of function **configure_iaap** or **idat_to_gtc**
+
+-   R package for retrieving GEO data and metadata - [GEOquery](https://www.bioconductor.org/packages/release/bioc/html/GEOquery.html)
+
+## Initialization and data retrieval
+
+We recommend to first correctly setup path to third-party IAAP-cli. Assuming *SureTypeSCR* is installed, we invoke IAAP-cli wrapper configuration script by running following code:
+
+```{r init1,echo=TRUE, warning=FALSE, results='hide',error=FALSE,message=FALSE}
+library(SureTypeSCR)
+
+configure_iaap()
+```
+
+The program will guide you to Illumina's web site where you can download IAAP-cli archive corresponding to your platform. After the archive has been download, press enter and type in the path of the downloaded archive, or, alternatively, a pop up window will appear (if GUI available) that you use for navigating to the downloaded archive. The function will then unpack the files into package's home folder and return the path of the binary file.
+
+After IAAP-cli is correctly set up, We initialize the required packages, load metadata related to **GSE19247** and select only **MDA** amplified sperm data
+
+```{r init2,echo=TRUE, warning=FALSE, results='hide',error=FALSE,message=FALSE}
+library(GEOquery)
+gse <- getGEO("GSE19247",GSEMatrix = TRUE)
+
+samplelist_sperm=as.data.frame(gse$`GSE19247-GPL6985_series_matrix.txt.gz`) %>% 
+  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
+  rownames()  
+```
+
+```{r samplelist}
+samplelist_sperm
+```
+
+We then use function **getGEO_and_folder(.)** to download the samples defined in **samplelist_sperm.** The idat files originating from the same array are downloaded into a common folder and the name of the folder corresponds to the array ID. Having idat files grouped by the array ID is the required by the conversion software (IAAP-cli).
+
+```{r download,cache=TRUE}
+metadf_sperm=map_if(samplelist_sperm,
+                    function(x) !is.null(x),
+                    function(x) SureTypeSCR::getGEO_and_folder_in(x,download=TRUE))
+metadf_sperm[[1]]
+```
+
+Every element of **metadf_sperm** stores record about a single sperm sample - we collapse all records into single data frame by running the following code.
+
+```{r collapse, cache=TRUE}
+metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
+head(metadf_sperm_merged)
+```
+
+Now we query the function **idat_to_gtc** (which is essentially the wrapper for IAAAP cli)over all **arrayid**'s. At this stage manifest and cluster file are required (deployed with the package for this type of array - Human CytoSNP array).
+
+```{r idat2gtc,echo=FALSE}
+manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
+cluster=system.file("files/HumanCytoSNP-12v2_H.egt",package="SureTypeSCR")
+
+for (ar in unique(metadf_sperm_merged$arrayid))
+{
+  idat_to_gtc(ar,'GTC',manifest,cluster)
+}
+
+
+```
+
+In the final stage we create sample sheet that links the sample names with their array ID and position on the array:
+
+```{r samplesheet,warning=FALSE}
+write_samplesheet('samplesheet.csv',metadf_sperm_merged,'GTC',manifest)
+head(read.csv('samplesheet.csv'))
+```
+
+Now we can test whether we can load the GTC files listed in the sample sheet using function **scbasic(.)**
+
+```{r load_test}
+df=scbasic(manifest,cluster,'samplesheet.csv')
+head(df)
+```
+
+From now on we can proceed with the analysis of **df** as shown in the main tutorial.
+
+# Further information
+
+For detailed description of available functions and parameters please see the reference manual (vignette). You can invoke help for a particular function by typing ?function_name.
