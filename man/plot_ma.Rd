@@ -32,5 +32,5 @@ cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 df=scbasic(manifest,cluster,samplesheet)
 
 #Visualise MA plot
-df %>% plot_ma(norm=TRUE,n=0.1)
+#df %>% plot_ma(norm=TRUE,n=0.1)
 }

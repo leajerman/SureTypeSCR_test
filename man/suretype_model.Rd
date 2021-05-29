@@ -22,9 +22,9 @@ suretype_model(df,individual, clf,.sclist=NULL)))
   cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
   clf=system.file("files/rf.clf",package="SureTypeSCR")
   
-  df_model = df %>%
-  calculate_ma() %>%
-  group_by(individual) %>%
-  nest() %>%
-  mutate(model=map(data , function(df) suretype_model(df,individual, clf,.sclist=list('gsm477563')))
+  #df_model = df %>%
+  #calculate_ma() %>%
+  #group_by(individual) %>%
+  #nest() %>%
+  #mutate(model=map(data , function(df) suretype_model(df,individual, clf,.sclist=list('gsm477563')))
 }

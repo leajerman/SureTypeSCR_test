@@ -25,10 +25,10 @@ samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
 manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
 cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 
-#Load data
-df=scbasic(manifest,cluster,samplesheet)
-# changing Gencall score threshold 
-df %>% set_threshold(clfcol='score',threshold=0.5) %>% callrate()
-# with higher threshold we expect lower call rate
-df %>% set_threshold(clfcol='score',threshold=0.75) %>% callrate()
+##Load data
+#df=scbasic(manifest,cluster,samplesheet)
+##changing Gencall score threshold 
+#df %>% set_threshold(clfcol='score',threshold=0.5) %>% callrate()
+##with higher threshold we expect lower call rate
+#df %>% set_threshold(clfcol='score',threshold=0.75) %>% callrate()
 }

@@ -23,6 +23,7 @@ Downloads metadata (and data) for GEO records specified in \code{x}.
 #  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
 #  rownames()  
 
-#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),function(x) getGEO_and_folder_in(x,download=TRUE))
+#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),
+#                   function(x) getGEO_and_folder_in(x,download=TRUE))
 #metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
 }

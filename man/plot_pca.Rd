@@ -33,5 +33,5 @@ cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 df=scbasic(manifest,cluster,samplesheet)
 
 #create ggplot object with PCA
-df %>% plot_pca(by_chrom=TRUE,features=c('x','y'),labels=TRUE)
+#df %>% plot_pca(by_chrom=TRUE,features=c('x','y'),labels=TRUE)
 }

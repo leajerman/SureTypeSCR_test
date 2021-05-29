@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{SureTypeSCR overview}
   %\VignetteEncoding{UTF-8}
 output:
-  BiocStyle::pdf_document:
+  BiocStyle::html_document:
     highlight: pygments
     number_sections: yes
     theme: united
@@ -222,7 +222,7 @@ metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
 head(metadf_sperm_merged)
 ```
 
-Now we query the function **idat_to_gtc** (which is essentially the wrapper for IAAAP cli)over all **arrayid**'s. At this stage manifest and cluster file are required (deployed with the package for this type of array - Human CytoSNP array).
+Now we query the function **idat_to_gtc** (which is essentially the wrapper for IAAAP-cli) over all **arrayid**'s. At this stage manifest and cluster file are required (deployed with the package for this type of array - Human CytoSNP array).
 
 ```{r idat2gtc,echo=FALSE}
 manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")

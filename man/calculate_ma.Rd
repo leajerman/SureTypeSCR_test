@@ -24,5 +24,5 @@ cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
 df=scbasic(manifest,cluster,samplesheet)
 
 #calculate MA transform and store in the original dataframe
-df %<>% calculate_ma()
+#df %<>% calculate_ma()
 }

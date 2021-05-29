@@ -2,7 +2,8 @@
 \alias{write_samplesheet}
 \title{Function creates samplesheet compatible with SureTypeSCR}
 \usage{
-write_samplesheet(filename,array_positions,gtc_output,manifest,experiment_name='Experiment1',project_name='Project1',investigator_name='Investigator1')
+write_samplesheet(filename,array_positions,gtc_output,manifest,experiment_name='Experiment1',\cr
+project_name='Project1',investigator_name='Investigator1')
 }
 
 \arguments{
@@ -22,7 +23,7 @@ write_samplesheet(filename,array_positions,gtc_output,manifest,experiment_name='
 %
 %}
 \examples{
-# library(GEOquery)
+#library(GEOquery)
 
 #gse <- getGEO("GSE19247",GSEMatrix = TRUE)
 #manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
@@ -31,10 +32,9 @@ write_samplesheet(filename,array_positions,gtc_output,manifest,experiment_name='
 #  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
 #  rownames()  
 
-#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),function(x) getGEO_and_folder_in(x,download=TRUE))
+#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),
+#                    function(x) getGEO_and_folder_in(x,download=TRUE))
 #metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
 
-
-
-#SureTypeSCR::write_samplesheet('samplesheet.csv',metadf_sperm_merged,'GTC',manifest)
+#write_samplesheet('samplesheet.csv',metadf_sperm_merged,'GTC',manifest)
 }

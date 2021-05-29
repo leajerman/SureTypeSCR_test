@@ -34,5 +34,5 @@ df=scbasic(manifest,cluster,samplesheet)
 clf_instance <- scload(clf) 
 
 #assign prediction results back to the original dataframe using margittr %<>% operator
-df %<>% predict_suretype(clf_instance) 
+#df %<>% predict_suretype(clf_instance) 
 }

@@ -19,9 +19,8 @@ Load pre-trained classifier from file.
 %
 %}
 \examples{
+setwd(system.file(package='SureTypeSCR'))
 
-
-#gtc_path=system.file('files/GTCs',package='SureTypeSCR')
 samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
 manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
 cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
@@ -32,6 +31,6 @@ clf=system.file('files/rf.clf',package='SureTypeSCR')
 df=scbasic(manifest,cluster,samplesheet)
 
 rf=scload(clf)
-df %>% calculate_ma() %>% predict_suretype(rf)
+#df %>% calculate_ma() %>% predict_suretype(rf)
 
 }

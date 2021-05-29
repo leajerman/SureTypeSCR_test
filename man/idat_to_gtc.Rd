@@ -23,7 +23,8 @@ The raw itensity data (red and green channel) are processed into GTC using Illum
 #  filter((str_detect(cell.type.ch1,'sperm')) & str_detect(cell.amplication.ch1,'MDA')) %>%
 #  rownames()  
 
-#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),function(x) SureTypeSCR::getGEO_and_folder_in(x,download=TRUE))
+#metadf_sperm=map_if(samplelist_sperm,function(x) !is.null(x),
+#                    function(x) getGEO_and_folder_in(x,download=TRUE))
 #metadf_sperm_merged = Reduce(function(...) merge(..., all=T), metadf_sperm)
 
 #manifest=system.file("files/HumanCytoSNP-12v2_H.bpm",package="SureTypeSCR")
