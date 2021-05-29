@@ -12,11 +12,19 @@ The following is needed prior to the installation:
 
 ## Installation
 
+It is preferred to install the package using devtools.
+
 ```R
 install.packages('devtools')
 library('devtools')
 ##install  SureTypeSCR  from  github
 devtools::install_github("Meiomap/SureTypeSCR")
+```
+
+Alternatively, user can download [current release](Meiomap/SureTypeSCRrelease) and then install the package using following command
+```
+R CMD INSTALL SureTypeSCR
+
 ```
 
 ## Package initialization and sample data loading
@@ -38,8 +46,7 @@ df=scbasic(manifest,cluster,samplesheet)
 
 ## Documentation
 
-For tutorial vignette and reference manual, please refer to [tutorial](subpro/subtext.md) and [reference manual](inst/doc/SureTypeSCR-reference_manual.pdf)
-doc/ and doc/, respectively. An inline help for a particular function can be invoked withing the code by typing ?function_name
+See [tutorial](https://meiomap.github.io/SureTypeSCR/) and [reference manual](inst/doc/SureTypeSCR-reference_manual.pdf) for complete documentation. An inline help for a particular function can be invoked withing the code by typing ?function_name.
 
 
 ## Further information
