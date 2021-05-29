@@ -23,7 +23,7 @@ devtools::install_github("Meiomap/SureTypeSCR")
 
 Alternatively, user can download [current release](Meiomap/SureTypeSCRrelease) and then install the package using following command
 ```
-R CMD INSTALL SureTypeSCR
+R CMD INSTALL SureTypeSCR_0.99.0.tar.gz
 
 ```
 
