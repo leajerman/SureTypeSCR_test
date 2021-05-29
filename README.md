@@ -22,6 +22,17 @@ devtools::install_github("Meiomap/SureTypeSCR")
 ## Initialization and data
 When loaded for the first time, SureTypeSCR will create a python virtual environment and install all required python libraries via python package installer (pip). A sample data and metadata can be deployed with the package can be used for testing whether everything was installed correctly.
 
+```R
+setwd(system.file(package='SureTypeSCR'))
+samplesheet=system.file('files/GSE19247_example.csv',package='SureTypeSCR')
+manifest=system.file('files/HumanCytoSNP-12v2_H.bpm',package='SureTypeSCR')
+cluster=system.file('files/HumanCytoSNP-12v2_H.egt',package='SureTypeSCR')
+
+#Load data
+df=scbasic(manifest,cluster,samplesheet)
+```
+
+
 
 ## Documentation
 
