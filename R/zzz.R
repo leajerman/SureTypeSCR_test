@@ -51,12 +51,12 @@
     virtualenv_install("r-reticulate", "pandas")
     #stop("pandas not found in python environment")
   } 
-  chk <- try(import("sklearn"),silent=TRUE)
+  chk <- try(import("scikit-learn"),silent=TRUE)
   if (inherits(chk, "try-error"))
   {
-    packageStartupMessage('Installing supporting python package: sklearn')
-    virtualenv_install("r-reticulate", "sklearn") 
-    #stop("sklearn not found in python environment")
+    packageStartupMessage('Installing supporting python package: scikit-learn')
+    virtualenv_install("r-reticulate", "scikit-learn") 
+    #stop("scikit-learn not found in python environment")
   }
   chk <- try(import("SureTypeSC"),silent=TRUE)
   if (inherits(chk, "try-error")) 
